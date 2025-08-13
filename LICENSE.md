@@ -102,7 +102,7 @@ If You accept warranty, support, indemnity, or other liability obligations, You 
 To apply this License, attach the following boilerplate notice:
 
 ```
-Copyright **2025** _Five_2357_
+Copyright 2025 Five_2357
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
