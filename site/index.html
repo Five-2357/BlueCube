@@ -1,279 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Essentials -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Site — crisp, modern starter</title>
-  <meta name="description" content="A fast, modern HTML starter with great defaults." />
-  <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b1324" media="(prefers-color-scheme: dark)">
-
-  <!-- Social (Open Graph / Twitter) -->
-  <meta property="og:title" content="Your Site — crisp, modern starter" />
-  <meta property="og:description" content="A fast, modern HTML starter with great defaults." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://example.com" />
-  <meta property="og:image" content="https://example.com/og-image.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Favicon (ICO) -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-  <!-- Fonts (Inter) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #0b1324;
-      --muted: #5b6875;
-      --card: #f7f8fb;
-      --border: #e6e8ee;
-      --brand: #0ea5e9;
-      --brand-2: #636bff;
-      --radius: 14px;
-      --shadow: 0 10px 30px rgba(3, 7, 18, 0.07);
-      --maxw: 1100px;
-      --pad: clamp(16px, 2vw, 24px);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0b1324;
-        --text: #eef2ff;
-        --muted: #a3adbd;
-        --card: #111a2f;
-        --border: #1f2b47;
-        --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      }
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 10% -10%, rgba(99,107,255,.18), transparent 60%),
-                  radial-gradient(1000px 700px at 110% 10%, rgba(14,165,233,.18), transparent 60%), var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    /* Layout */
-    .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); }
-    header {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: saturate(180%) blur(12px);
-      background: color-mix(in oklab, var(--bg) 75%, transparent);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .2px; }
-    .brand-logo {
-      width: 28px; height: 28px; border-radius: 8px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: var(--shadow);
-    }
-    nav ul { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
-    nav a {
-      color: var(--text); text-decoration: none; font-weight: 600; opacity: .9;
-    }
-    nav a:hover, nav a:focus-visible { opacity: 1; text-underline-offset: 6px; text-decoration: underline; }
-
-    /* Mobile nav */
-    .menu-btn { display: none; border: 1px solid var(--border); background: var(--card); padding: 8px 10px; border-radius: 10px; }
-    @media (max-width: 800px) {
-      nav ul { display: none; position: absolute; inset: 64px var(--pad) auto var(--pad); background: var(--bg); border: 1px solid var(--border);
-               border-radius: 14px; padding: 12px; box-shadow: var(--shadow); }
-      nav ul.open { display: grid; gap: 8px; }
-      .menu-btn { display: inline-flex; }
-    }
-
-    /* Hero */
-    .hero {
-      padding: clamp(48px, 8vw, 120px) 0 48px;
-      display: grid; gap: 28px; text-align: center; place-items: center;
-    }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .3px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: white; border-radius: 999px; padding: 6px 12px; box-shadow: var(--shadow);
-    }
-    .title { font-size: clamp(28px, 7vw, 56px); line-height: 1.05; margin: 0; }
-    .lead  { margin: 0 auto; max-width: 70ch; color: var(--muted); font-size: clamp(16px, 2.2vw, 20px); }
-
-    .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 12px; border: 1px solid var(--border);
-      font-weight: 700; text-decoration: none; transition: transform .06s ease, box-shadow .2s ease;
-    }
-    .btn.primary { color: white; background: linear-gradient(135deg, var(--brand), var(--brand-2)); border: none; box-shadow: var(--shadow); }
-    .btn:hover { transform: translateY(-1px); }
-
-    /* Cards */
-    .grid { display: grid; gap: 18px; grid-template-columns: repeat(3, 1fr); }
-    @media (max-width: 950px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 650px) { .grid { grid-template-columns: 1fr; } }
-
-    .card {
-      background: color-mix(in oklab, var(--card) 90%, transparent);
-      border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
-    }
-    .card h3 { margin: 0 0 6px; font-size: 20px; }
-    .card p  { margin: 0; color: var(--muted); }
-
-    /* Section */
-    section { padding: 40px 0 64px; }
-    .section-title { font-size: clamp(22px, 4vw, 32px); margin: 0 0 18px; }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border); padding: 28px 0; margin-top: 40px;
-      background: color-mix(in oklab, var(--bg) 85%, transparent);
-    }
-    .foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-    .foot a { color: inherit; text-decoration: none; }
-    .foot a:hover { text-decoration: underline; text-underline-offset: 4px; }
-
-    /* Accessibility helpers */
-    .skip-link {
-      position: absolute; left: 8px; top: -40px; padding: 8px 12px; border-radius: 10px;
-      background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow);
-    }
-    .skip-link:focus { top: 8px; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        header, footer {
+            background: #222;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        a { color: #0078ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-  <a href="#main" class="skip-link">Skip to content</a>
 
-  <header>
-    <div class="container nav" role="navigation" aria-label="Main">
-      <a class="brand" href="/">
-        <span class="brand-logo" aria-hidden="true"></span>
-        <span>Brand</span>
-      </a>
+<header>
+    <h1>My Website</h1>
+    <nav>
+        <a href="#">Home</a> | 
+        <a href="#">About</a> | 
+        <a href="#">Contact</a>
+    </nav>
+</header>
 
-      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navList" aria-label="Toggle menu">☰</button>
+<main>
+    <h2>Welcome</h2>
+    <p>This is a simple HTML template with a header, footer, and favicon.</p>
+</main>
 
-      <nav>
-        <ul id="navList">
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a class="btn" href="#contact">Contact</a></li>
-          <li><button class="btn" id="themeToggle" type="button" aria-pressed="false">🌓 <span class="sr-only">Toggle theme</span></button></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<footer>
+    <p>&copy; 2025 My Website</p>
+</footer>
 
-  <main id="main">
-    <section class="hero container">
-      <span class="eyebrow">🚀 shipping in style</span>
-      <h1 class="title">Starter template that actually looks good</h1>
-      <p class="lead">Drop this in, tweak the variables, and you’ve got a site with proper semantics, dark mode, and tasteful vibes. Minimal JS. Accessible by default.</p>
-      <div class="cta">
-        <a class="btn primary" href="#features">Get Started</a>
-        <a class="btn" href="#about">Learn More</a>
-      </div>
-    </section>
-
-    <section id="features" class="container">
-      <h2 class="section-title">Features</h2>
-      <div class="grid">
-        <article class="card">
-          <h3>Responsive out of the box</h3>
-          <p>Scales cleanly from mobile to 4K with modern CSS and a tight grid.</p>
-        </article>
-        <article class="card">
-          <h3>Dark mode smart</h3>
-          <p>Respects system preference and includes a toggle you can keep or remove.</p>
-        </article>
-        <article class="card">
-          <h3>Accessible & semantic</h3>
-          <p>Skip links, landmark roles, focus-visible states — no excuses.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="pricing" class="container">
-      <h2 class="section-title">Pricing</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Free</h3>
-          <p>Use this starter, change the colors, go wild. $0.</p>
-        </div>
-        <div class="card">
-          <h3>Pro</h3>
-          <p>Add your own backend and start charging. You do you.</p>
-        </div>
-        <div class="card">
-          <h3>Enterprise</h3>
-          <p>Replace buzzwords with results. Ship faster, sleep better.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="container">
-      <h2 class="section-title">About</h2>
-      <p>Built with modern defaults so you can focus on the fun bits. No frameworks required, but it won’t fight you if you add one later.</p>
-    </section>
-
-    <section id="contact" class="container">
-      <h2 class="section-title">Contact</h2>
-      <p>Swap this for your form / link up Formspree, Netlify forms, or your own endpoint.</p>
-      <a class="btn primary" href="mailto:hello@example.com">Email us</a>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container foot">
-      <div>© <span id="year"></span> Brand. All rights reserved.</div>
-      <div>
-        <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Status</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Mobile nav
-    const menuBtn = document.getElementById('menuBtn');
-    const navList = document.getElementById('navList');
-    menuBtn?.addEventListener('click', () => {
-      const open = navList.classList.toggle('open');
-      menuBtn.setAttribute('aria-expanded', String(open));
-    });
-
-    // Theme toggle (respects system by default)
-    const toggle = document.getElementById('themeToggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    const applyTheme = (mode) => {
-      document.documentElement.dataset.theme = mode;
-      document.documentElement.style.colorScheme = mode;
-      toggle?.setAttribute('aria-pressed', mode === 'dark');
-    };
-    const saved = localStorage.getItem('theme');
-    if (saved) applyTheme(saved);
-    prefersDark.addEventListener('change', e => {
-      if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light');
-    });
-    toggle?.addEventListener('click', () => {
-      const current = document.documentElement.dataset.theme || (prefersDark.matches ? 'dark' : 'light');
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      localStorage.setItem('theme', next);
-    });
-
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-
-  <noscript>JavaScript is disabled — site still works, but the menu/theme toggle won’t.</noscript>
 </body>
 </html>
