@@ -1,6 +1,6 @@
 # Apache License
 **Version 2.0, January 2004**  
-[http://www.apache.org/licenses](Copy of this License){Apache}
+<http://www.apache.org/licenses/>
 
 ---
 
@@ -97,8 +97,12 @@ If You accept warranty, support, indemnity, or other liability obligations, You 
 
 ---
 
+## APPENDIX: How to apply the Apache License to your work
+
+To apply this License, attach the following boilerplate notice:
+
 ```
-Copyright [2025] [Five_2357]
+Copyright **2025** _Five_2357_
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
