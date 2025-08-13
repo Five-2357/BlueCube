@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>Blue-Cube</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         :root {
@@ -12,42 +12,41 @@
             --light-text: #000000;
             --dark-bg: #0d0d0d;
             --dark-text: #ffffff;
+            --light-card: #f5f5f5;
+            --dark-card: #1a1a1a;
         }
 
-        @media (prefers-color-scheme: light) {
-            body {
-                background-color: var(--light-bg);
-                color: var(--light-text);
-            }
-            header, footer {
-                background-color: var(--blue);
-                color: white;
-            }
-            main {
-                background-color: #f5f5f5;
-            }
+        /* Default light mode */
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        header, footer {
+            background-color: var(--blue);
+            color: white;
+        }
+        main {
+            background-color: var(--light-card);
         }
 
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: var(--dark-bg);
-                color: var(--dark-text);
-            }
-            header, footer {
-                background-color: var(--blue);
-                color: white;
-            }
-            main {
-                background-color: #1a1a1a;
-            }
+        /* Dark mode */
+        body.dark {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        body.dark main {
+            background-color: var(--dark-card);
         }
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        header, footer {
+        header {
             padding: 1rem;
             text-align: center;
         }
@@ -61,32 +60,76 @@
             text-decoration: underline;
         }
         main {
+            flex: 1;
             padding: 2rem;
             max-width: 900px;
             margin: auto;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        footer {
+            padding: 1rem;
+            text-align: center;
+        }
+        .theme-toggle {
+            background: white;
+            color: var(--blue);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        body.dark .theme-toggle {
+            background: var(--dark-card);
+            color: white;
+            border: 1px solid white;
         }
     </style>
 </head>
 <body>
-
 <header>
-    <h1>My Website</h1>
+    <h1>BlueCube</h1>
     <nav>
         <a href="#">Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
+        <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
     </nav>
 </header>
 
 <main>
-    <h2>Welcome</h2>
-    <p>This is a clean HTML template with a blue + black/white theme that changes with your system’s light/dark mode.</p>
+    <h21>Welcome</h1>
 </main>
 
 <footer>
     <p>&copy; 2025 My Website</p>
 </footer>
 
+<script>
+    const toggleBtn = document.getElementById("themeToggle");
+
+    // Apply saved theme or system preference
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+        localStorage.setItem("theme", theme);
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        applyTheme(prefersDark ? "dark" : "light");
+    }
+
+    // Toggle theme on button click
+    toggleBtn.addEventListener("click", () => {
+        const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+        applyTheme(newTheme);
+    });
+</script>
 </body>
 </html>
