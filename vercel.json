@@ -1,9 +1,11 @@
 {
-  "cleanUrls": true,
+  "cleanUrls": false,
   "rewrites": [
-    { "source": "/:file", "destination": "/:file.html" }
+    { "source": "/:file", "destination": "/:file.html" },
+    { "source": "/:folder/:file", "destination": "/:folder/:file.html" }
   ],
   "redirects": [
-    { "source": "/:file(.+)\\.html", "destination": "/:file", "permanent": true }
+    { "source": "/:file(.+)\\.html", "destination": "/:file", "permanent": true },
+    { "source": "/:folder/:file(.+)\\.html", "destination": "/:folder/:file", "permanent": true }
   ]
 }
