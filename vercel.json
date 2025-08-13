@@ -1,5 +1,9 @@
 {
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/:file", "destination": "/:file.html" }
+  ],
   "redirects": [
-    { "source": "/:file(.+).html", "destination": "/:file", "permanent": true }
+    { "source": "/:file(.+)\\.html", "destination": "/:file", "permanent": true }
   ]
 }
