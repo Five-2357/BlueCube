@@ -92,27 +92,13 @@
 </head>
 <body>
 <header>
-    <h1 class="fa-solid fa-cube">BlueCube</h1>
+    <h1 class="fa-solid fa-cube"> BlueCube</h1>
     <nav>
-        <a class="fa-solid fa-home" href="#">Home</a>
+        <a class="fa-solid fa-home" href="#"> Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
         <button class="fa-solid fa-wind theme-toggle" id="themeToggle"> Theme</button>
     </nav>
-    <script>
-const toggleBtn = document.getElementById('themeToggle');
-
-// Set initial icon based on system preference
-let prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-toggleBtn.classList.toggle('fa-moon', prefersDark);
-toggleBtn.classList.toggle('fa-sun', !prefersDark);
-
-// Clicking just swaps the icon
-toggleBtn.addEventListener('click', () => {
-    toggleBtn.classList.toggle('fa-sun');
-    toggleBtn.classList.toggle('fa-moon');
-});
-</script>
 </header>
 
 <main>
