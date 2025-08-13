@@ -1,20 +1,7 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "Site/**/*",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)/?",
-      "dest": "/Site/$1/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/Site/$1"
-    }
+    { "src": "**/*.html", "use": "@vercel/static" }
   ],
   "cleanUrls": true
 }
