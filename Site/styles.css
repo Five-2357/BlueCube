@@ -2,13 +2,13 @@
 nav a {
     position: relative;
     font-weight: 600;
-    text-decoration: none;       /* kill default underline */
+    text-decoration: none;   /* remove default underline */
     color: inherit;
     padding: 0.25rem 0;
     transition: color 0.3s ease;
 }
 
-/* Custom underline */
+/* Animated underline (center-out) */
 nav a::after {
     content: "";
     position: absolute;
@@ -17,21 +17,40 @@ nav a::after {
     width: 0%;
     height: 2px;
     background: currentColor;
+    border-radius: 2px;
     transition: width 0.3s ease, left 0.3s ease;
 }
 
-/* On hover: underline grows from center outwards */
 nav a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* --- Hover Colors --- */
+body:not(.dark) nav a:hover {
+    color: var(--blue); /* Light mode: switch to brand blue */
+}
+body.dark nav a:hover {
+    color: #66b2ff; /* Dark mode: softer blue */
+}
+
+/* --- Active Link Highlight (optional) --- */
+nav a.active {
+    color: var(--blue);
+}
+body.dark nav a.active {
+    color: #66b2ff;
+}
+nav a.active::after {
     width: 100%;
     left: 0;
 }
 
 /* --- Theme Toggle Glow --- */
 #themeToggle {
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 #themeToggle:hover {
     transform: scale(1.08);
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
 }
