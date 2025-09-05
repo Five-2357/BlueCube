@@ -1,14 +1,73 @@
-/* --- Nav Links --- */
+:root {
+    --blue: #007bff;
+    --light-bg: #ffffff;
+    --light-text: #111111;
+    --dark-bg: #0d0d0d;
+    --dark-text: #f1f1f1;
+    --light-card: #f5f5f5;
+    --dark-card: #1a1a1a;
+    --shadow: rgba(0, 0, 0, 0.15);
+    --radius: 12px;
+    --transition: 0.3s ease;
+}
+
+/* Reset + base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--light-text);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+/* Header */
+header {
+    display: flex;
+    flex-direction: column; /* stacked layout */
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 2px 6px var(--shadow);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Nav Links */
 nav a {
     position: relative;
     font-weight: 600;
-    text-decoration: none;   /* remove default underline */
+    text-decoration: none;   /* kill default underline */
     color: inherit;
     padding: 0.25rem 0;
     transition: color 0.3s ease;
 }
 
-/* Animated underline (center-out) */
+/* Animated underline */
 nav a::after {
     content: "";
     position: absolute;
@@ -20,21 +79,20 @@ nav a::after {
     border-radius: 2px;
     transition: width 0.3s ease, left 0.3s ease;
 }
-
 nav a:hover::after {
     width: 100%;
     left: 0;
 }
 
-/* --- Hover Colors --- */
+/* Hover colors */
 body:not(.dark) nav a:hover {
-    color: var(--blue); /* Light mode: switch to brand blue */
+    color: var(--blue);
 }
 body.dark nav a:hover {
-    color: #66b2ff; /* Dark mode: softer blue */
+    color: #66b2ff;
 }
 
-/* --- Active Link Highlight (optional) --- */
+/* Active link support */
 nav a.active {
     color: var(--blue);
 }
@@ -46,11 +104,70 @@ nav a.active::after {
     left: 0;
 }
 
-/* --- Theme Toggle Glow --- */
+/* Theme toggle button */
 #themeToggle {
-    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+    background: #fff;
+    color: var(--blue);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 #themeToggle:hover {
     transform: scale(1.08);
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+}
+body.dark #themeToggle {
+    background: var(--dark-card);
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    border-radius: var(--radius);
+    background: var(--light-card);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: background var(--transition), color var(--transition);
+}
+
+main h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+main a {
+    display: inline-block;
+    transition: transform var(--transition);
+}
+main a:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.85rem;
+    opacity: 0.95;
+}
+
+/* Dark Mode */
+body.dark {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+body.dark main {
+    background: var(--dark-card);
+}
+body.dark footer {
+    background: #111;
 }
