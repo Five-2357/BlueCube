@@ -1,65 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Absolutely not the #1 Website. AND IS COMPLTY USELESS.">
-<title>Blue-Cube • Five2357</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<script src="https://kit.fontawesome.com/b44b8a57e7.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Absolutely not the #1 Website. AND IS COMPLTY USELESS.">
+    <title>Blue-Cube • Five2357</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script src="https://kit.fontawesome.com/b44b8a57e7.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        :root {
+            --blue: #007bff;
+            --light-bg: #ffffff;
+            --light-text: #000000;
+            --dark-bg: #0d0d0d;
+            --dark-text: #ffffff;
+            --light-card: #f5f5f5;
+            --dark-card: #1a1a1a;
+        }
+
+        /* Default light mode */
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        header, footer {
+            background-color: var(--blue);
+            color: white;
+        }
+        main {
+            background-color: var(--light-card);
+        }
+
+        /* Dark mode */
+        body.dark {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        body.dark main {
+            background-color: var(--dark-card);
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            padding: 1rem;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        footer {
+            padding: 1rem;
+            text-align: center;
+        }
+        .theme-toggle {
+            background: white;
+            color: var(--blue);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        body.dark .theme-toggle {
+            background: var(--dark-card);
+            color: white;
+            border: 1px solid white;
+        }
+    </style>
 </head>
 <body>
 <header>
 <h1>
-  <a href="/" style="text-decoration: none; color: inherit; display:flex; align-items:center; gap:0.5rem;">
-    <img src="/favicon.ico" alt="BlueCube Logo" width="48" height="48">
+  <a href="/" style="text-decoration: none; color: inherit;">
+    <img src="/favicon.ico" alt="BlueCube Logo" width="48" height="48" style="vertical-align: middle;">
     BlueCube
   </a>
 </h1>
-<nav>
-    <a href="/"><i class="fa-solid fa-home"></i> Home</a>
-    <a href="/github"><i class="fa-brands fa-github"></i> GitHub</a>
-    <a href="#"><i class="fa-brands fa-discord"></i> Discord</a>
-    <button id="themeToggle" class="theme-toggle"><i class="fa-solid fa-wind"></i> Theme</button>
-</nav>
+
+    <nav>
+        <a href="/"><i class="fa-solid fa-home"></i>  Home</a>
+        <a href="/GitHub"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="#"><i class="fa-brands fa-discord"></i> Discord</a>
+        <button id="themeToggle"><i class="fa-solid fa-wind theme-toggle"></i> Theme</button>
+    </nav>
 </header>
 
-<main style="max-width:1200px;">
-    <h1><i class="fa-solid fa-door-open"></i> Hidden Message Encoder</h1>
-    <div class="encoder-body" style="display:flex; flex-direction:column; align-items:center;">
-        <label>Type your secret message:</label>
-        <textarea id="inputMessage" placeholder="Your message here..." style="width:90%; max-width:800px; height:80px;"></textarea>
+<main>
+  <h1>Hidden Message Encoder</h1>
 
-        <label>Output mode:</label>
-        <select id="modeSelect" style="width:90%; max-width:800px;">
-            <option value="invisible">Invisible (0-width)</option>
-            <option value="box">Box preview 🪱</option>
-        </select>
-        <button onclick="encodeMessage()">Encode</button>
+  <label>Type your secret message:</label>
+  <textarea id="inputMessage" placeholder="Your message here..."></textarea>
+  <br>
+  <label>Output mode:</label>
+  <select id="modeSelect">
+    <option value="invisible">Invisible (0-width)</option>
+    <option value="box">Box preview 🪱</option>
+  </select>
+  <button onclick="encodeMessage()">Encode</button>
 
-        <label>Output:</label>
-        <div id="outputInvisible" class="output-box" title="Copy this text" style="width:90%; max-width:800px;"></div>
-        <select id="outputType" style="width:90%; max-width:800px; margin-top:5px;">
-            <option value="invisible">Invisible</option>
-            <option value="box">Box preview</option>
-        </select>
-        <button class="copy-btn" onclick="copyOutput()">Copy Output</button>
+  <label>Output:</label>
+  <div id="outputInvisible" class="output-box" title="Copy this text"></div>
+  <select id="outputType" style="margin-top:5px;">
+    <option value="invisible">Invisible</option>
+    <option value="box">Box preview</option>
+  </select>
+  <button class="copy-btn" onclick="copyOutput()">Copy Output</button>
 
-        <hr style="width:90%; margin:20px 0; border:1px solid #111;">
+  <hr style="width:90%; margin:20px 0; border:1px solid #111;">
 
-        <label>Paste text here to decode:</label>
-        <textarea id="inputInvisible" placeholder="Paste hidden text..." style="width:90%; max-width:800px; height:80px;"></textarea>
-        <select id="decodeType" style="width:90%; max-width:800px; margin-top:5px;">
-            <option value="invisible">Invisible</option>
-            <option value="box">Box preview</option>
-        </select>
-        <button onclick="decodeMessage()">Decode</button>
+  <label>Paste text here to decode:</label>
+  <textarea id="inputInvisible" placeholder="Paste hidden text..."></textarea>
+  <select id="decodeType" style="margin-top:5px;">
+    <option value="invisible">Invisible</option>
+    <option value="box">Box preview</option>
+  </select>
+  <button onclick="decodeMessage()">Decode</button>
 
-        <label>Decoded Message:</label>
-        <textarea id="decodedMessage" placeholder="Decoded message appears here..." style="width:90%; max-width:800px; height:80px;"></textarea>
-        <button class="copy-btn" onclick="copyDecoded()">Copy Decoded</button>
-    </div>
+  <label>Decoded Message:</label>
+  <textarea id="decodedMessage" placeholder="Decoded message appears here..."></textarea>
+  <button class="copy-btn" onclick="copyDecoded()">Copy Decoded</button>
+
+  <script>
+    const Z0 = '\u200B'; // zero-width space
+    const Z1 = '\u200C'; // zero-width non-joiner
+    const BOX = '🪱';    // visual fallback
+
+    // Encode
+    function encodeMessage() {
+        const msg = document.getElementById('inputMessage').value;
+        const mode = document.getElementById('modeSelect').value;
+        const bytes = new TextEncoder().encode(msg);
+        let bits = '';
+        for (const byte of bytes) bits += byte.toString(2).padStart(8,'0');
+        const invisible = bits.split('').map(b => b==='0'?Z0:Z1).join('');
+
+        const outputDiv = document.getElementById('outputInvisible');
+        outputDiv.dataset.hidden = invisible;
+        document.getElementById('outputType').value = mode;
+
+        if(mode === 'box'){
+            outputDiv.textContent = invisible.replace(/[\u200B\u200C]/g, BOX);
+        } else {
+            outputDiv.textContent = invisible;
+        }
+    }
+
+    // Decode
+    function decodeMessage() {
+        let input = document.getElementById('inputInvisible').value;
+        const mode = document.getElementById('decodeType').value;
+
+        if(mode === 'box'){
+            input = input.replace(new RegExp(BOX, 'g'), Z0);
+        }
+
+        const bits = [...input].filter(ch => ch===Z0||ch===Z1).map(ch=>ch===Z0?'0':'1').join('');
+        const bytes = bits.match(/.{1,8}/g)||[];
+        const arr = new Uint8Array(bytes.map(b=>parseInt(b,2)));
+        const msg = new TextDecoder().decode(arr);
+        document.getElementById('decodedMessage').value = msg;
+    }
+
+    // Copy buttons
+    function copyOutput(){
+        const hidden = document.getElementById('outputInvisible').dataset.hidden || '';
+        navigator.clipboard.writeText(hidden).then(()=>alert("Output copied!"));
+    }
+    function copyDecoded(){
+        const msg = document.getElementById('decodedMessage').value;
+        navigator.clipboard.writeText(msg).then(()=>alert("Decoded message copied!"));
+    }
+  </script>
 </main>
 
 <footer>
@@ -68,40 +203,27 @@
 </footer>
 
 <script>
-const toggleBtn = document.getElementById("themeToggle");
-function applyTheme(theme){
-    document.body.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-}
-const savedTheme = localStorage.getItem("theme");
-if(savedTheme){ applyTheme(savedTheme); }
-else{ applyTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark":"light"); }
-toggleBtn.addEventListener("click", ()=>{ applyTheme(document.body.classList.contains("dark") ? "light":"dark"); });
+    const toggleBtn = document.getElementById("themeToggle");
 
-// Hidden Message Encoder logic
-const Z0='\u200B', Z1='\u200C', BOX='🪱';
-function encodeMessage(){
-    const msg=document.getElementById('inputMessage').value;
-    const mode=document.getElementById('modeSelect').value;
-    const bytes=new TextEncoder().encode(msg);
-    let bits=''; for(const byte of bytes) bits+=byte.toString(2).padStart(8,'0');
-    const invisible=bits.split('').map(b=>b==='0'?Z0:Z1).join('');
-    const outputDiv=document.getElementById('outputInvisible');
-    outputDiv.dataset.hidden=invisible;
-    document.getElementById('outputType').value=mode;
-    outputDiv.textContent=mode==='box'? invisible.replace(/[\u200B\u200C]/g,BOX):invisible;
-}
-function decodeMessage(){
-    let input=document.getElementById('inputInvisible').value;
-    const mode=document.getElementById('decodeType').value;
-    if(mode==='box') input=input.replace(new RegExp(BOX,'g'),Z0);
-    const bits=[...input].filter(ch=>ch===Z0||ch===Z1).map(ch=>ch===Z0?'0':'1').join('');
-    const bytes=bits.match(/.{1,8}/g)||[];
-    const arr=new Uint8Array(bytes.map(b=>parseInt(b,2)));
-    document.getElementById('decodedMessage').value=new TextDecoder().decode(arr);
-}
-function copyOutput(){ navigator.clipboard.writeText(document.getElementById('outputInvisible').dataset.hidden||'').then(()=>alert("Output copied!")); }
-function copyDecoded(){ navigator.clipboard.writeText(document.getElementById('decodedMessage').value).then(()=>alert("Decoded message copied!")); }
+    // Apply saved theme or system preference
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+        localStorage.setItem("theme", theme);
+    }
+
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        applyTheme(prefersDark ? "dark" : "light");
+    }
+
+    // Toggle theme on button click
+    toggleBtn.addEventListener("click", () => {
+        const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+        applyTheme(newTheme);
+    });
 </script>
 </body>
 </html>
