@@ -1,19 +1,19 @@
-/* --- Dropdown Button like Nav Links --- */
-.dropbtn {
+/* --- Nav Links --- */
+nav a, .dropbtn {
+    position: relative;
     font-weight: 600;
-    text-decoration: none;
+    text-decoration: none;   /* remove default underline */
     color: inherit;
     padding: 0.25rem 0.5rem;
+    transition: color 0.3s ease;
     background: none;
     border: none;
     cursor: pointer;
     font: inherit;
-    position: relative; /* for underline */
-    transition: color 0.3s ease;
 }
 
-/* Animated underline for dropdown button */
-.dropbtn::after {
+/* Animated underline for nav links, dropdown button, and dropdown links */
+nav a::after, .dropbtn::after, .dropdown-content a::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -25,26 +25,81 @@
     transition: width 0.3s ease, left 0.3s ease;
 }
 
-/* Hover underline and color */
-.dropbtn:hover::after {
+/* Hover underline effect */
+nav a:hover::after, .dropbtn:hover::after, .dropdown-content a:hover::after {
     width: 100%;
     left: 0;
 }
-body:not(.dark) .dropbtn:hover {
+
+/* Hover colors */
+body:not(.dark) nav a:hover,
+body:not(.dark) .dropbtn:hover,
+body:not(.dark) .dropdown-content a:hover {
     color: var(--blue);
 }
-body.dark .dropbtn:hover {
+body.dark nav a:hover,
+body.dark .dropbtn:hover,
+body.dark .dropdown-content a:hover {
     color: #66b2ff;
 }
 
-/* Active state for dropdown button */
-.dropbtn.active {
+/* Active link highlight */
+nav a.active, .dropbtn.active, .dropdown-content a.active {
     color: var(--blue);
 }
-body.dark .dropbtn.active {
+body.dark nav a.active, body.dark .dropbtn.active, body.dark .dropdown-content a.active {
     color: #66b2ff;
 }
-.dropbtn.active::after {
+nav a.active::after, .dropbtn.active::after, .dropdown-content a.active::after {
     width: 100%;
     left: 0;
+}
+
+/* --- Theme Toggle Glow --- */
+#themeToggle {
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+#themeToggle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+}
+
+/* --- Dropdown --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown menu hidden by default */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%; /* flush below the button */
+    left: 0;
+    background-color: #f1f1f1;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+/* Show dropdown on hover over the container */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Dropdown links styled like nav links */
+.dropdown-content a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: black;
+    text-decoration: none;
+    position: relative; /* for underline */
+    transition: color 0.3s ease, background 0.2s ease;
+}
+
+/* Dropdown hover background */
+.dropdown-content a:hover {
+    background-color: #ddd;
 }
