@@ -1,44 +1,19 @@
-/* --- Dropdown container --- */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Dropdown menu hidden by default */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%; /* right below the button */
-    left: 0;
-    background-color: #f1f1f1;
-    min-width: 150px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    border-radius: 5px;
-    z-index: 1;
-}
-
-/* Show dropdown when hovering anywhere over .dropdown container */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Dropdown links styled like nav links */
-.dropdown-content a {
-    display: block;
-    padding: 0.5rem 1rem;
+/* --- Dropdown Button like Nav Links --- */
+.dropbtn {
     font-weight: 600;
-    color: black;
     text-decoration: none;
+    color: inherit;
+    padding: 0.25rem 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
     position: relative; /* for underline */
+    transition: color 0.3s ease;
 }
 
-/* Hover effect for dropdown links */
-.dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-/* Animated underline for dropdown links */
-.dropdown-content a::after {
+/* Animated underline for dropdown button */
+.dropbtn::after {
     content: "";
     position: absolute;
     left: 50%;
@@ -50,15 +25,26 @@
     transition: width 0.3s ease, left 0.3s ease;
 }
 
-.dropdown-content a:hover::after {
+/* Hover underline and color */
+.dropbtn:hover::after {
     width: 100%;
     left: 0;
 }
-
-/* Hover colors for dropdown links */
-body:not(.dark) .dropdown-content a:hover {
+body:not(.dark) .dropbtn:hover {
     color: var(--blue);
 }
-body.dark .dropdown-content a:hover {
+body.dark .dropbtn:hover {
     color: #66b2ff;
+}
+
+/* Active state for dropdown button */
+.dropbtn.active {
+    color: var(--blue);
+}
+body.dark .dropbtn.active {
+    color: #66b2ff;
+}
+.dropbtn.active::after {
+    width: 100%;
+    left: 0;
 }
