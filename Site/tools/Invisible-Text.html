@@ -109,93 +109,84 @@
     </nav>
 </header>
 
-<main>
-  <h1>Hidden Message Encoder</h1>
+<main style="font-family:'Segoe UI',sans-serif; background:#000; color:#eee; display:flex; flex-direction:column; align-items:center; padding:40px;">
+  <h1 style="color:#1e90ff; margin-bottom:20px;">Hidden Message Encoder</h1>
 
-  <label>Type your secret message:</label>
-  <textarea id="inputMessage" placeholder="Your message here..."></textarea>
-  <br>
-  <label>Output mode:</label>
-  <select id="modeSelect">
+  <label style="margin-top:10px; font-weight:bold;">Type your secret message:</label>
+  <textarea id="inputMessage" placeholder="Your message here..." style="width:90%; max-width:600px; height:80px; margin:10px 0; padding:10px; font-size:16px; border-radius:10px; border:none; outline:none; resize:none; background:#111; color:#eee;"></textarea>
+
+  <label style="margin-top:10px; font-weight:bold;">Output mode:</label>
+  <select id="modeSelect" style="margin:5px; padding:5px; border-radius:8px; border:none; background:#111; color:#00bfff;">
     <option value="invisible">Invisible (0-width)</option>
     <option value="box">Box preview 🪱</option>
   </select>
-  <button onclick="encodeMessage()">Encode</button>
+  <button onclick="encodeMessage()" style="background:#1e90ff; border:none; padding:10px 20px; font-size:16px; border-radius:10px; cursor:pointer; margin:5px;">Encode</button>
 
-  <label>Output:</label>
-  <div id="outputInvisible" class="output-box" title="Copy this text"></div>
-  <select id="outputType" style="margin-top:5px;">
+  <label style="margin-top:10px; font-weight:bold;">Output:</label>
+  <div id="outputInvisible" class="output-box" title="Copy this text" style="font-family:monospace; font-size:20px; background:#111; color:#00bfff; padding:15px; border-radius:10px; margin-top:10px; white-space:pre-wrap; word-break:break-all;"></div>
+  <select id="outputType" style="margin-top:5px; margin:5px; padding:5px; border-radius:8px; border:none; background:#111; color:#00bfff;">
     <option value="invisible">Invisible</option>
     <option value="box">Box preview</option>
   </select>
-  <button class="copy-btn" onclick="copyOutput()">Copy Output</button>
+  <button class="copy-btn" onclick="copyOutput()" style="background:#00bfff; color:#000; border:none; padding:10px 20px; font-size:16px; border-radius:10px; cursor:pointer; margin:5px;">Copy Output</button>
 
   <hr style="width:90%; margin:20px 0; border:1px solid #111;">
 
-  <label>Paste text here to decode:</label>
-  <textarea id="inputInvisible" placeholder="Paste hidden text..."></textarea>
-  <select id="decodeType" style="margin-top:5px;">
+  <label style="margin-top:10px; font-weight:bold;">Paste text here to decode:</label>
+  <textarea id="inputInvisible" placeholder="Paste hidden text..." style="width:90%; max-width:600px; height:80px; margin:10px 0; padding:10px; font-size:16px; border-radius:10px; border:none; outline:none; resize:none; background:#111; color:#eee;"></textarea>
+  <select id="decodeType" style="margin-top:5px; margin:5px; padding:5px; border-radius:8px; border:none; background:#111; color:#00bfff;">
     <option value="invisible">Invisible</option>
     <option value="box">Box preview</option>
   </select>
-  <button onclick="decodeMessage()">Decode</button>
+  <button onclick="decodeMessage()" style="background:#1e90ff; border:none; padding:10px 20px; font-size:16px; border-radius:10px; cursor:pointer; margin:5px;">Decode</button>
 
-  <label>Decoded Message:</label>
-  <textarea id="decodedMessage" placeholder="Decoded message appears here..."></textarea>
-  <button class="copy-btn" onclick="copyDecoded()">Copy Decoded</button>
+  <label style="margin-top:10px; font-weight:bold;">Decoded Message:</label>
+  <textarea id="decodedMessage" placeholder="Decoded message appears here..." style="width:90%; max-width:600px; height:80px; margin:10px 0; padding:10px; font-size:16px; border-radius:10px; border:none; outline:none; resize:none; background:#111; color:#eee;"></textarea>
+  <button class="copy-btn" onclick="copyDecoded()" style="background:#00bfff; color:#000; border:none; padding:10px 20px; font-size:16px; border-radius:10px; cursor:pointer; margin:5px;">Copy Decoded</button>
 
   <script>
-    const Z0 = '\u200B'; // zero-width space
-    const Z1 = '\u200C'; // zero-width non-joiner
-    const BOX = '🪱';    // visual fallback
+    const Z0 = '\u200B';
+    const Z1 = '\u200C';
+    const BOX = '🪱';
 
-    // Encode
     function encodeMessage() {
-        const msg = document.getElementById('inputMessage').value;
-        const mode = document.getElementById('modeSelect').value;
-        const bytes = new TextEncoder().encode(msg);
-        let bits = '';
-        for (const byte of bytes) bits += byte.toString(2).padStart(8,'0');
-        const invisible = bits.split('').map(b => b==='0'?Z0:Z1).join('');
+      const msg = document.getElementById('inputMessage').value;
+      const mode = document.getElementById('modeSelect').value;
+      const bytes = new TextEncoder().encode(msg);
+      let bits = '';
+      for (const byte of bytes) bits += byte.toString(2).padStart(8,'0');
+      const invisible = bits.split('').map(b => b==='0'?Z0:Z1).join('');
 
-        const outputDiv = document.getElementById('outputInvisible');
-        outputDiv.dataset.hidden = invisible;
-        document.getElementById('outputType').value = mode;
+      const outputDiv = document.getElementById('outputInvisible');
+      outputDiv.dataset.hidden = invisible;
+      document.getElementById('outputType').value = mode;
 
-        if(mode === 'box'){
-            outputDiv.textContent = invisible.replace(/[\u200B\u200C]/g, BOX);
-        } else {
-            outputDiv.textContent = invisible;
-        }
+      outputDiv.textContent = mode==='box' ? invisible.replace(/[\u200B\u200C]/g, BOX) : invisible;
     }
 
-    // Decode
     function decodeMessage() {
-        let input = document.getElementById('inputInvisible').value;
-        const mode = document.getElementById('decodeType').value;
+      let input = document.getElementById('inputInvisible').value;
+      const mode = document.getElementById('decodeType').value;
+      if(mode==='box') input = input.replace(new RegExp(BOX,'g'), Z0);
 
-        if(mode === 'box'){
-            input = input.replace(new RegExp(BOX, 'g'), Z0);
-        }
-
-        const bits = [...input].filter(ch => ch===Z0||ch===Z1).map(ch=>ch===Z0?'0':'1').join('');
-        const bytes = bits.match(/.{1,8}/g)||[];
-        const arr = new Uint8Array(bytes.map(b=>parseInt(b,2)));
-        const msg = new TextDecoder().decode(arr);
-        document.getElementById('decodedMessage').value = msg;
+      const bits = [...input].filter(ch => ch===Z0||ch===Z1).map(ch=>ch===Z0?'0':'1').join('');
+      const bytes = bits.match(/.{1,8}/g)||[];
+      const arr = new Uint8Array(bytes.map(b=>parseInt(b,2)));
+      document.getElementById('decodedMessage').value = new TextDecoder().decode(arr);
     }
 
-    // Copy buttons
-    function copyOutput(){
-        const hidden = document.getElementById('outputInvisible').dataset.hidden || '';
-        navigator.clipboard.writeText(hidden).then(()=>alert("Output copied!"));
+    function copyOutput() {
+      const hidden = document.getElementById('outputInvisible').dataset.hidden||'';
+      navigator.clipboard.writeText(hidden).then(()=>alert("Output copied!"));
     }
-    function copyDecoded(){
-        const msg = document.getElementById('decodedMessage').value;
-        navigator.clipboard.writeText(msg).then(()=>alert("Decoded message copied!"));
+
+    function copyDecoded() {
+      const msg = document.getElementById('decodedMessage').value;
+      navigator.clipboard.writeText(msg).then(()=>alert("Decoded message copied!"));
     }
   </script>
 </main>
+
 
 <footer>
     <p>&copy; 2025 BlueCube</p>
