@@ -9,9 +9,9 @@
 **A**: ***IDK***. Why would i know.  
 
 **Websites:**  
-1. [https://bluecube.pages.dev/](https://bluecube.pages.dev/)  
-2. [https://bluecube-5.netlify.app/](https://bluecube-5.netlify.app/)  
-3. [https://blue-cube-5.vercel.app/](https://blue-cube-5.vercel.app/)
+1. [https://bluecube.pages.dev/](https://bluecube.pages.dev/)
+2. https://blue-cube-5.vercel.app/
+3. https://bluecube-5.netlify.app
 
 ---
 ----
