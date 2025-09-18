@@ -1,27 +1,72 @@
 const canvas = document.getElementById('fluid');
 const ctx = canvas.getContext('2d');
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
 
-let mouse = { x: 0, y: 0 };
+window.addEventListener('resize', () => {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+});
+
+let mouse = { x: width / 2, y: height / 2 };
 document.addEventListener('mousemove', e => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
+const particles = [];
+const maxParticles = 200;
+const gradientColors = ['#58a6ff', '#8a2be2']; // blue → purple
+
+class Particle {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random() - 0.5) * 2;
+    this.vy = (Math.random() - 0.5) * 2;
+    this.life = Math.random() * 100 + 50;
+    this.size = Math.random() * 8 + 2;
+    this.color = gradientColors[Math.floor(Math.random() * gradientColors.length)];
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life--;
+    this.vx *= 0.95;
+    this.vy *= 0.95;
+  }
+  draw(ctx) {
+    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+    gradient.addColorStop(0, this.color);
+    gradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function addParticles() {
+  for (let i = 0; i < 5; i++) {
+    if (particles.length < maxParticles) {
+      particles.push(new Particle(mouse.x, mouse.y));
+    }
+  }
+}
+
 function animate() {
   ctx.fillStyle = 'rgba(13,17,23,0.2)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, width, height);
 
-  ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2);
-  ctx.fillStyle = '#58a6ff';
-  ctx.fill();
+  addParticles();
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.update();
+    p.draw(ctx);
+    if (p.life <= 0) particles.splice(i, 1);
+  }
 
   requestAnimationFrame(animate);
 }
