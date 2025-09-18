@@ -2,15 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BlueCube  Users</title>
+  <title>BlueCube • Users</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #58a6ff;
+      border-bottom: 2px solid #30363d;
+      padding-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+    }
+
+    a {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .user-card {
+      background: #161b22;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
   <h1>BlueCube • Users</h1>
-  <p>User-1: 
-    <a style="color: blue;" href="Five2357">Five2357</a>
-  </p>
 
-  <!-- Load your JS file -->
-  <script src="/stuff/flud.js"></script>
+  <div class="user-card">
+    <p>User-1: 
+      <a href="Five2357">Five2357</a>
+    </p>
+  </div>
+
+  <!-- JS must be type="module" if you use import/export -->
+  <script type="module" src="/stuff/flud.js"></script>
 </body>
 </html>
