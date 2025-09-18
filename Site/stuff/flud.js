@@ -1,29 +1,57 @@
-const canvas = document.getElementById('fluid');
-const ctx = canvas.getContext('2d');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BlueCube • Users</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      overflow: hidden;
+    }
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
+    h1 {
+      color: #58a6ff;
+      padding: 20px;
+    }
 
-// Example: draw trailing circles on mouse move
-let mouse = { x: 0, y: 0 };
-document.addEventListener('mousemove', e => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-});
+    .user-card {
+      background: #161b22;
+      margin: 20px;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
 
-function animate() {
-  ctx.fillStyle = 'rgba(13,17,23,0.2)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    a {
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
 
-  ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2);
-  ctx.fillStyle = '#58a6ff';
-  ctx.fill();
+    #fluid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fluid"></canvas>
 
-  requestAnimationFrame(animate);
-}
-animate();
+  <h1>BlueCube • Users</h1>
+  <div class="user-card">
+    <p>User-1: <a href="Five2357">Five2357</a></p>
+  </div>
+
+  <!-- Link to separate JS file -->
+  <script src="./stuff/flud.js"></script>
+</body>
+</html>
