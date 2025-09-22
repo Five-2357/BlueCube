@@ -11,80 +11,91 @@ window.addEventListener('resize', () => {
   height = canvas.height = window.innerHeight;
 });
 
-// fluid grid resolution
-const gridSize = 120;
+// grid
+const gridSize = 150;
 const cellSize = Math.min(width, height) / gridSize;
 
-const velocityX = Array(gridSize * gridSize).fill(0);
-const velocityY = Array(gridSize * gridSize).fill(0);
-const density   = Array(gridSize * gridSize).fill(0);
+const vx = new Float32Array(gridSize * gridSize);
+const vy = new Float32Array(gridSize * gridSize);
+const dens = new Float32Array(gridSize * gridSize);
 
 function idx(x, y) {
   return x + y * gridSize;
 }
 
-// mouse interaction
+// mouse injects "ink"
 document.addEventListener('mousemove', e => {
   const gx = Math.floor(e.clientX / cellSize);
   const gy = Math.floor(e.clientY / cellSize);
   if (gx > 1 && gx < gridSize - 1 && gy > 1 && gy < gridSize - 1) {
     const i = idx(gx, gy);
-    density[i] += 80;
-    velocityX[i] += (e.movementX || 0) * 0.3;
-    velocityY[i] += (e.movementY || 0) * 0.3;
+    dens[i] += 50;
+    vx[i] += e.movementX * 0.2;
+    vy[i] += e.movementY * 0.2;
   }
 });
 
-// fluid simulation step
+// bilinear interpolation helper
+function sample(arr, x, y) {
+  const x0 = Math.floor(x);
+  const x1 = Math.min(x0 + 1, gridSize - 1);
+  const y0 = Math.floor(y);
+  const y1 = Math.min(y0 + 1, gridSize - 1);
+  const tx = x - x0;
+  const ty = y - y0;
+
+  return (
+    arr[idx(x0, y0)] * (1 - tx) * (1 - ty) +
+    arr[idx(x1, y0)] * tx * (1 - ty) +
+    arr[idx(x0, y1)] * (1 - tx) * ty +
+    arr[idx(x1, y1)] * tx * ty
+  );
+}
+
 function step() {
-  const newDensity = density.slice();
-  const newVX = velocityX.slice();
-  const newVY = velocityY.slice();
+  const newDens = new Float32Array(dens.length);
+  const newVX = new Float32Array(vx.length);
+  const newVY = new Float32Array(vy.length);
 
   for (let y = 1; y < gridSize - 1; y++) {
     for (let x = 1; x < gridSize - 1; x++) {
       const i = idx(x, y);
 
-      // fade density slowly
-      newDensity[i] *= 0.995;
+      // backtrace
+      let px = x - vx[i] * 0.05;
+      let py = y - vy[i] * 0.05;
 
-      // backtrace advection
-      let px = x - velocityX[i] * 0.05;
-      let py = y - velocityY[i] * 0.05;
       px = Math.max(1, Math.min(gridSize - 2, px));
       py = Math.max(1, Math.min(gridSize - 2, py));
-      newDensity[i] = density[idx(Math.floor(px), Math.floor(py))];
 
-      // velocity decay
-      newVX[i] *= 0.99;
-      newVY[i] *= 0.99;
+      newDens[i] = sample(dens, px, py) * 0.99;
+      newVX[i] = vx[i] * 0.98;
+      newVY[i] = vy[i] * 0.98;
     }
   }
 
-  for (let i = 0; i < density.length; i++) {
-    density[i] = newDensity[i];
-    velocityX[i] = newVX[i];
-    velocityY[i] = newVY[i];
-  }
+  dens.set(newDens);
+  vx.set(newVX);
+  vy.set(newVY);
 }
 
-// render fluid to canvas
 function render() {
   const image = ctx.createImageData(width, height);
   const data = image.data;
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      const gx = Math.floor(x / cellSize);
-      const gy = Math.floor(y / cellSize);
-      const d = density[idx(gx, gy)] || 0;
+      const gx = x / cellSize;
+      const gy = y / cellSize;
+
+      const d = sample(dens, gx, gy);
       const c = Math.min(255, d * 4);
 
-      const index = (x + y * width) * 4;
-      data[index] = 90;    // R
-      data[index+1] = 140; // G
-      data[index+2] = 255; // B
-      data[index+3] = c;   // alpha
+      const i = (x + y * width) * 4;
+      data[i] = 90;
+      data[i + 1] = 140;
+      data[i + 2] = 255;
+      data[i + 3] = c;
     }
   }
 
