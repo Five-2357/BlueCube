@@ -16,25 +16,30 @@ document.addEventListener('mousemove', e => {
 });
 
 const particles = [];
-const maxParticles = 200;
+const maxParticles = 400;
 const gradientColors = ['#58a6ff', '#8a2be2']; // blue → purple
 
 class Particle {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.vx = (Math.random() - 0.5) * 2;
-    this.vy = (Math.random() - 0.5) * 2;
-    this.life = Math.random() * 100 + 50;
-    this.size = Math.random() * 8 + 2;
+    this.vx = (Math.random() - 0.5) * 3;
+    this.vy = (Math.random() - 0.5) * 3;
+    this.life = Math.random() * 200 + 100;
+    this.size = Math.random() * 12 + 4;
     this.color = gradientColors[Math.floor(Math.random() * gradientColors.length)];
   }
   update() {
     this.x += this.vx;
     this.y += this.vy;
+
+    // gentle velocity drift → fluid look
+    this.vx += (Math.random() - 0.5) * 0.1;
+    this.vy += (Math.random() - 0.5) * 0.1;
+
+    this.vx *= 0.98;
+    this.vy *= 0.98;
     this.life--;
-    this.vx *= 0.95;
-    this.vy *= 0.95;
   }
   draw(ctx) {
     const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
@@ -48,7 +53,7 @@ class Particle {
 }
 
 function addParticles() {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 8; i++) {
     if (particles.length < maxParticles) {
       particles.push(new Particle(mouse.x, mouse.y));
     }
@@ -56,7 +61,8 @@ function addParticles() {
 }
 
 function animate() {
-  ctx.fillStyle = 'rgba(13,17,23,0.2)';
+  // semi-transparent overlay → motion blur / liquid smear
+  ctx.fillStyle = 'rgba(13,17,23,0.08)';
   ctx.fillRect(0, 0, width, height);
 
   addParticles();
