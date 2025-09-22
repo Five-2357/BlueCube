@@ -29,7 +29,9 @@ class Tendril {
         this.vx = (Math.random()-0.5)*6;
         this.vy = (Math.random()-0.5)*6;
         this.life = Math.random()*200+150;
-        this.color = `hsla(${Math.random()*360},100%,75%,1)`;
+        // icy blue tones
+        const hue = 180 + Math.random()*60; 
+        this.color = `hsla(${hue},100%,75%,1)`;
         this.branches = [];
         for(let i=0;i<maxBranches;i++){
             this.branches.push({x:center.x, y:center.y, vx:(Math.random()-0.5)*3, vy:(Math.random()-0.5)*3});
@@ -38,14 +40,13 @@ class Tendril {
     update() {
         let p = this.points[this.points.length-1];
 
-        // attract to mouse with some random chaos
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
-        this.vx += dx*0.005 + (Math.random()-0.5)*0.8;
-        this.vy += dy*0.005 + (Math.random()-0.5)*0.8;
+        this.vx += dx*0.006 + (Math.random()-0.5)*1;
+        this.vy += dy*0.006 + (Math.random()-0.5)*1;
 
-        this.vx *= 0.94;
-        this.vy *= 0.94;
+        this.vx *= 0.93;
+        this.vy *= 0.93;
 
         p.x += this.vx;
         p.y += this.vy;
@@ -53,14 +54,13 @@ class Tendril {
         this.points.push({x:p.x, y:p.y});
         if(this.points.length > this.life) this.points.shift();
 
-        // branches
         for(let b of this.branches){
             const dx2 = mouse.x - b.x;
             const dy2 = mouse.y - b.y;
-            b.vx += dx2*0.004 + (Math.random()-0.5)*0.5;
-            b.vy += dy2*0.004 + (Math.random()-0.5)*0.5;
-            b.vx *= 0.95;
-            b.vy *= 0.95;
+            b.vx += dx2*0.005 + (Math.random()-0.5)*0.6;
+            b.vy += dy2*0.005 + (Math.random()-0.5)*0.6;
+            b.vx *= 0.94;
+            b.vy *= 0.94;
             b.x += b.vx;
             b.y += b.vy;
         }
@@ -68,8 +68,7 @@ class Tendril {
         if(Math.random()<0.01) this.reset();
     }
     draw(ctx) {
-        // main glow tendril
-        ctx.shadowBlur = 25;
+        ctx.shadowBlur = 30;
         ctx.shadowColor = this.color;
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -79,7 +78,6 @@ class Tendril {
         ctx.strokeStyle = this.color;
         ctx.stroke();
 
-        // draw branches
         for(let b of this.branches){
             ctx.beginPath();
             ctx.moveTo(center.x, center.y);
@@ -87,16 +85,13 @@ class Tendril {
             ctx.strokeStyle = this.color;
             ctx.stroke();
         }
-
         ctx.shadowBlur = 0;
     }
 }
 
-// create tendrils
 for(let i=0;i<maxTendrils;i++) tendrils.push(new Tendril());
 
 function animate() {
-    // fade trails
     ctx.fillStyle = 'rgba(0,0,0,0.08)';
     ctx.fillRect(0,0,w,h);
 
