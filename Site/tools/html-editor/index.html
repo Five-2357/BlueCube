@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live HTML Editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+  <div id="container">
+    <aside id="files">
+      <h3>Files</h3>
+      <ul id="file-list"></ul>
+      <button id="new-file">New File</button>
+      <button id="delete-file">Delete File</button>
+      <button id="export">Export ZIP</button>
+    </aside>
+
+    <main id="editor-section">
+      <textarea id="editor"></textarea>
+    </main>
+
+    <section id="preview-section">
+      <iframe id="preview" sandbox="allow-scripts"></iframe>
+      <div id="errors"></div>
+      <div id="console">
+        <div id="console-output"></div>
+        <input id="console-input" placeholder="Type JS command here and press Enter...">
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/htmlmixed/htmlmixed.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/css/css.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
