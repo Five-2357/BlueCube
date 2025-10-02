@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Interface</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      padding: 20px 40px;
+      font-family: 'Source Code Pro', monospace;
+      font-weight: 400;
+    }
+
+    .console {
+      color: #fff;
+      font-weight: 700;
+      max-width: 100%;
+    }
+
+    .console-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    .console-label {
+      width: 1em;
+      margin-left: -1em;
+      display: inline-block;
+      vertical-align: bottom;
+    }
+
+    .console-input {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      width: 100%;
+      margin: 0;
+      padding: 5px;
+      border-bottom: 2px solid #444;
+      font-size: 16px;
+    }
+
+    .console-output {
+      font-size: 16px;
+      margin: 3px 0;
+    }
+
+    .console-capture {
+      position: fixed;
+      margin-left: -200%;
+    }
+
+    .console-prompt-box {
+      position: relative;
+      max-width: 100%;
+    }
+
+    #settings-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 24px;
+      padding: 10px;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    #settings-panel {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #222;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9998;
+    }
+
+    #settings-panel.open {
+      display: flex;
+    }
+
+    #settings-panel label {
+      font-size: 14px;
+    }
+
+    #settings-panel input[type="color"],
+    #settings-panel input[type="text"] {
+      margin-left: 10px;
+    }
+
+    #apply-settings {
+      padding: 5px 10px;
+      background: #444;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="console">
+    <div class="console-inner" id="console-output">
+      <textarea class="console-capture"></textarea>
+      <div class="console-prompt-box">
+        <span class="console-label">&gt;</span>
+        <input type="text" class="console-input" autofocus>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class Console {
+      constructor() {
+        this.input = document.querySelector('.console-input');
+        this.output = document.getElementById('console-output');
+        this.promptType = 'info';
+        this.commandHistory = [];
+        this.historyIndex = -1;
+        this.init();
+      }
+
+      init() {
+        this._loadSettings();
+        this._focus();
+        this._addSettingsButton();
+        this._handleInput();
+      }
+
+      _focus() {
+        this.input?.focus();
+      }
+
+      _handleInput() {
+        this.input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const rawCommand = this.input.value.trim();
+            if (rawCommand) {
+              this.commandHistory.push(rawCommand);
+              this.historyIndex = this.commandHistory.length;
+              const isSilent = rawCommand.startsWith(':');
+              const command = isSilent ? rawCommand.slice(1).trim() : rawCommand;
+              this._processCommand(command, isSilent);
+              this.input.value = '';
+            }
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (this.historyIndex > 0) {
+              this.historyIndex--;
+              this.input.value = this.commandHistory[this.historyIndex];
+            }
+          } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (this.historyIndex < this.commandHistory.length - 1) {
+              this.historyIndex++;
+              this.input.value = this.commandHistory[this.historyIndex];
+            } else {
+              this.historyIndex = this.commandHistory.length;
+              this.input.value = '';
+            }
+          }
+        });
+      }
+
+      _processCommand(command, silent = false) {
+        if (!silent) this._log(`> [${this.promptType}]: ${command}`);
+
+        const args = command.split(' ');
+        const base = args[0].toLowerCase();
+
+        switch (base) {
+          case 'open':
+            const url = args.slice(1).join(' ');
+            if (/^https?:\/\//.test(url)) {
+              window.open(url, "_blank");
+              if (!silent) this._log(`> [system]: Opened ${url}`);
+            } else {
+              if (!silent) this._log("> [error]: Invalid URL. Use http:// or https://");
+            }
+            break;
+
+          case 'clear':
+            this._clearOutput();
+            break;
+
+          case 'help':
+            this._log("> Available commands:");
+            this._log("> - open <url>: open a website");
+            this._log("> - clear: clear the console");
+            this._log("> - help: show this help");
+            this._log("> - echo <text>: print text");
+            this._log("> - date: show current date and time");
+            this._log("> - about: info about this console");
+            break;
+
+          case 'echo':
+            this._log(`> ${args.slice(1).join(' ')}`);
+            break;
+
+          case 'date':
+            this._log(`> ${new Date().toString()}`);
+            break;
+
+          case 'about':
+            this._log("> Console v1.0 | Built by ChatGPT & Yousuf ✨");
+            break;
+
+          default:
+            if (!silent) this._log(`> [error]: Unknown command "${base}" — try 'help'`);
+            break;
+        }
+      }
+
+      _log(message) {
+        const entry = document.createElement('div');
+        entry.className = 'console-output';
+        entry.textContent = message;
+        this.output.appendChild(entry);
+        this.output.scrollTop = this.output.scrollHeight;
+      }
+
+      _clearOutput() {
+        const children = Array.from(this.output.children);
+        children.forEach(child => {
+          if (!child.classList.contains('console-prompt-box')) {
+            this.output.removeChild(child);
+          }
+        });
+      }
+
+      _loadSettings() {
+        const saved = JSON.parse(localStorage.getItem('console-settings')) || {
+          bg: '#111111',
+          text: '#ffffff',
+          type: 'info'
+        };
+
+        this.promptType = saved.type;
+        document.body.style.backgroundColor = saved.bg;
+        document.body.style.color = saved.text;
+        document.querySelectorAll('.console-input').forEach(el => el.style.color = saved.text);
+      }
+
+      _addSettingsButton() {
+        const button = document.createElement('button');
+        button.innerHTML = '⚙️';
+        button.id = 'settings-btn';
+        document.body.appendChild(button);
+
+        const panel = document.createElement('div');
+        panel.id = 'settings-panel';
+        panel.innerHTML = `
+          <label>Background: <input type="color" id="bg-color"></label>
+          <label>Text Color: <input type="color" id="text-color"></label>
+          <label>Prompt Type: <input type="text" id="prompt-type"></label>
+          <button id="apply-settings">Apply</button>
+        `;
+        document.body.appendChild(panel);
+
+        const saved = JSON.parse(localStorage.getItem('console-settings')) || {
+          bg: '#111111',
+          text: '#ffffff',
+          type: 'info'
+        };
+        document.getElementById('bg-color').value = saved.bg;
+        document.getElementById('text-color').value = saved.text;
+        document.getElementById('prompt-type').value = saved.type;
+
+        button.addEventListener('click', () => {
+          panel.classList.toggle('open');
+        });
+
+        document.getElementById('apply-settings').addEventListener('click', () => {
+          const bg = document.getElementById('bg-color').value;
+          const text = document.getElementById('text-color').value;
+          const type = document.getElementById('prompt-type').value;
+
+          this.promptType = type || 'info';
+          document.body.style.backgroundColor = bg;
+          document.body.style.color = text;
+          document.querySelectorAll('.console-input').forEach(el => el.style.color = text);
+
+          localStorage.setItem('console-settings', JSON.stringify({
+            bg, text, type: this.promptType
+          }));
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.Console = new Console();
+    });
+  </script>
+</body>
+</html>
