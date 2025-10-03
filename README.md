@@ -10,8 +10,8 @@
 
 **Websites:**  
 1. [https://bluecube.pages.dev/](https://bluecube.pages.dev/?from=Git)
-2. [https://blue-cube-5.vercel.app/](https://blue-cube-5.vercel.app/?from=Git)
-3. [https://bluecube-5.netlify.app](https://bluecube-5.netlify.app/?from=Git)
+2. [https://blue-cube-5.vercel.app/](https://blue-cube-5.vercel.app/?from=Git)  [Closed]
+3. [https://bluecube-5.netlify.app](https://bluecube-5.netlify.app/?from=Git)  [Closed]
 
 ---
 ----
