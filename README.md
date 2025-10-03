@@ -10,6 +10,7 @@
 
 **Websites:**  
 1. [https://bluecube.pages.dev/](https://bluecube.pages.dev/?from=Git)
-
+2. [Im too broke]
+3. [yes still TOO BROKE]
 ---
 ----
