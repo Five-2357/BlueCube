@@ -8,32 +8,34 @@
 <script src="https://kit.fontawesome.com/b44b8a57e7.js" crossorigin="anonymous"></script>
 
 <style>
-  /* Import font */
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
-  /* Universal cursor */
-  * {
+  body, html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: url("https://cdn-icons-png.flaticon.com/512/32/32392.png") 16 16, auto;
-  }
-
-  /* Also apply cursor to particles canvas explicitly */
-  #particles-js, #particles-js canvas {
-    cursor: url("https://cdn-icons-png.flaticon.com/512/32/32392.png") 16 16, auto !important;
-  }
-
-  body {
+    cursor: none; /* hide default cursor */
     font-family: 'Poppins', sans-serif;
     background: radial-gradient(circle at top, #2e003e, #000);
     color: white;
-    overflow-x: hidden;
     min-height: 100vh;
+    overflow-x: hidden;
     position: relative;
   }
 
-  /* Particle background */
+  /* Fake cursor */
+  #custom-cursor {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    pointer-events: none; /* allow clicks to pass through */
+    background: url('https://cdn-icons-png.flaticon.com/512/32/32392.png') no-repeat center center;
+    background-size: contain;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s linear; /* smooth following */
+  }
+
   #particles-js {
     position: fixed;
     width: 100%;
@@ -43,7 +45,6 @@
     z-index: -1;
   }
 
-  /* Banner */
   .banner {
     width: 100%;
     height: 300px;
@@ -54,7 +55,6 @@
     border-bottom: 3px solid #8a2be2;
   }
 
-  /* Profile pic */
   .profile {
     text-align: center;
     margin-top: -80px;
@@ -81,7 +81,6 @@
     text-shadow: 0 0 10px #b84bff, 0 0 20px #9b30ff;
   }
 
-  /* Links section */
   .links {
     margin-top: 30px;
     display: flex;
@@ -123,7 +122,6 @@
     transform: scale(1.05);
   }
 
-  /* Twitch Embed */
   .twitch-section {
     margin-top: 50px;
     display: flex;
@@ -157,63 +155,70 @@
     font-size: 0.9rem;
     padding-bottom: 20px;
   }
+
 </style>
 </head>
 <body>
-  <div id="particles-js"></div>
 
-  <div class="banner"></div>
+<div id="custom-cursor"></div>
+<div id="particles-js"></div>
 
-  <div class="profile">
-    <img src="https://yt3.googleusercontent.com/LHi0c0cni2Zf6GVa2Vsu889xxBhu-Htlp03Mfk8hzdsLJSETiEWEHPBTHcbo-EmmHxbvS6CvEQ=s160-c-k-c0x00ffffff-no-rj" alt="Voidternity Profile">
-    <div class="name">Voidternity</div>
-  </div>
+<div class="banner"></div>
 
-  <div class="links">
-    <a href="https://www.youtube.com/@Voidternity" target="_blank" class="link"><i class="fa-brands fa-youtube"></i> YouTube</a>
-    <a href="https://twitch.tv/voidternity" target="_blank" class="link"><i class="fa-brands fa-twitch"></i> Twitch</a>
-    <a href="https://discord.gg/VXbneskVUv" target="_blank" class="link"><i class="fa-brands fa-discord"></i> Discord</a>
-    <a href="https://www.tiktok.com/@Voidternity" target="_blank" class="link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
-    <a href="https://streamlabs.com/voidternity/tip" target="_blank" class="link"><i class="fa-solid fa-money-bills"></i> Tip</a>
-  </div>
+<div class="profile">
+  <img src="https://yt3.googleusercontent.com/LHi0c0cni2Zf6GVa2Vsu889xxBhu-Htlp03Mfk8hzdsLJSETiEWEHPBTHcbo-EmmHxbvS6CvEQ=s160-c-k-c0x00ffffff-no-rj" alt="Voidternity Profile">
+  <div class="name">Voidternity</div>
+</div>
 
-  <div class="twitch-section">
-    <h2 style="margin-bottom: 10px; text-shadow: 0 0 20px #a020f0;">Live on Twitch</h2>
-    <div id="twitch-embed"></div>
-  </div>
+<div class="links">
+  <a href="https://www.youtube.com/@Voidternity" target="_blank" class="link"><i class="fa-brands fa-youtube"></i> YouTube</a>
+  <a href="https://twitch.tv/voidternity" target="_blank" class="link"><i class="fa-brands fa-twitch"></i> Twitch</a>
+  <a href="https://discord.gg/VXbneskVUv" target="_blank" class="link"><i class="fa-brands fa-discord"></i> Discord</a>
+  <a href="https://www.tiktok.com/@Voidternity" target="_blank" class="link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+  <a href="https://streamlabs.com/voidternity/tip" target="_blank" class="link"><i class="fa-solid fa-money-bills"></i> Tip</a>
+</div>
 
-  <footer>© 2025 Five2357 • HTML-JS:Five2357 | CSS:With ChatGPT Help • 🟪🟣💜</footer>
+<div class="twitch-section">
+  <h2 style="margin-bottom: 10px; text-shadow: 0 0 20px #a020f0;">Live on Twitch</h2>
+  <div id="twitch-embed"></div>
+</div>
 
-  <!-- Twitch Embed Script -->
-  <script src="https://player.twitch.tv/js/embed/v1.js"></script>
-  <script>
-    new Twitch.Player("twitch-embed", {
-      channel: "voidternity"
-    });
-  </script>
+<footer>© 2025 Five2357 • HTML-JS:Five2357 | CSS:With ChatGPT Help • 🟪🟣💜</footer>
 
-  <!-- Particles.js -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script>
-    particlesJS("particles-js", {
-      "particles": {
-        "number": { "value": 100 },
-        "color": { "value": "#a020f0" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.5 },
-        "size": { "value": 3 },
-        "line_linked": { "enable": true, "distance": 120, "color": "#8a2be2", "opacity": 0.4, "width": 1 },
-        "move": { "enable": true, "speed": 2 }
-      },
-      "interactivity": {
-        "detect_on": "canvas",
-        "events": {
-          "onhover": { "enable": true, "mode": "repulse" },
-          "onclick": { "enable": true, "mode": "push" }
-        }
-      },
-      "retina_detect": true
-    });
-  </script>
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+<script>
+  new Twitch.Player("twitch-embed", {
+    channel: "voidternity"
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 100 },
+      "color": { "value": "#a020f0" },
+      "shape": { "type": "circle" },
+      "opacity": { "value": 0.5 },
+      "size": { "value": 3 },
+      "line_linked": { "enable": true, "distance": 120, "color": "#8a2be2", "opacity": 0.4, "width": 1 },
+      "move": { "enable": true, "speed": 2 }
+    },
+    "interactivity": {
+      "detect_on": "canvas",
+      "events": {
+        "onhover": { "enable": true, "mode": "repulse" },
+        "onclick": { "enable": true, "mode": "push" }
+      }
+    },
+    "retina_detect": true
+  });
+
+  // Custom cursor follow
+  const cursor = document.getElementById('custom-cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+  });
+</script>
 </body>
 </html>
