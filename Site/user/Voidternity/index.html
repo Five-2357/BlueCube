@@ -126,13 +126,24 @@
       align-items: center;
     }
 
-    #twitch-embed {
-      width: 80%;
-      height: 480px;
-      border: 2px solid #9b30ff;
-      border-radius: 15px;
-      box-shadow: 0 0 40px #a020f0;
-    }
+#twitch-embed {
+  position: relative;
+  width: 80%;
+  padding-top: 45%; /* 16:9 ratio = 9/16 = 0.5625 → 56.25%, tweak smaller for more height */
+  border: 2px solid #9b30ff;
+  border-radius: 15px;
+  box-shadow: 0 0 40px #a020f0;
+  overflow: hidden;
+}
+
+#twitch-embed iframe {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 
     footer {
       margin-top: 60px;
