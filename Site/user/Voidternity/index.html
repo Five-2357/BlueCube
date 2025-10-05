@@ -14,26 +14,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none; /* hide default cursor */
     font-family: 'Poppins', sans-serif;
     background: radial-gradient(circle at top, #2e003e, #000);
     color: white;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
-  }
-
-  /* Fake cursor */
-  #custom-cursor {
-    position: fixed;
-    width: 32px;
-    height: 32px;
-    pointer-events: none; /* allow clicks to pass through */
-    background: url('cursor.png') no-repeat center center;
-    background-size: contain;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.05s linear; /* smooth following */
   }
 
   #particles-js {
@@ -155,12 +141,10 @@
     font-size: 0.9rem;
     padding-bottom: 20px;
   }
-
 </style>
 </head>
 <body>
 
-<div id="custom-cursor"></div>
 <div id="particles-js"></div>
 
 <div class="banner"></div>
@@ -212,12 +196,6 @@
       }
     },
     "retina_detect": true
-  });
-
-  // Custom cursor follow
-  const cursor = document.getElementById('custom-cursor');
-  document.addEventListener('mousemove', e => {
-    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
   });
 </script>
 </body>
