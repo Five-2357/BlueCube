@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Voidternity</title>
-  <link rel="icon" href="https://yt3.googleusercontent.com/LHi0c0cni2Zf6GVa2Vsu889xxBhu-Htlp03Mfk8hzdsLJSETiEWEHPBTHcbo-EmmHxbvS6CvEQ=s160-c-k-c0x00ffffff-no-rj" type="image/x-icon">
+<link rel="icon" href="https://yt3.googleusercontent.com/LHi0c0cni2Zf6GVa2Vsu889xxBhu-Htlp03Mfk8hzdsLJSETiEWEHPBTHcbo-EmmHxbvS6CvEQ=s160-c-k-c0x00ffffff-no-rj" type="image/x-icon">
   <script src="https://kit.fontawesome.com/b44b8a57e7.js" crossorigin="anonymous"></script>
   <style>
+    /* Import font */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
     * {
@@ -25,6 +26,7 @@
       position: relative;
     }
 
+    /* Particle background */
     #particles-js {
       position: fixed;
       width: 100%;
@@ -34,6 +36,7 @@
       z-index: -1;
     }
 
+    /* Banner */
     .banner {
       width: 100%;
       height: 300px;
@@ -44,6 +47,7 @@
       border-bottom: 3px solid #8a2be2;
     }
 
+    /* Profile pic */
     .profile {
       text-align: center;
       margin-top: -80px;
@@ -70,6 +74,7 @@
       text-shadow: 0 0 10px #b84bff, 0 0 20px #9b30ff;
     }
 
+    /* Links section */
     .links {
       margin-top: 30px;
       display: flex;
@@ -90,6 +95,7 @@
       overflow: hidden;
     }
 
+    /* Hover trail effect */
     .link::after {
       content: '';
       position: absolute;
@@ -111,32 +117,21 @@
       transform: scale(1.05);
     }
 
-    /* Twitch Embed Full Width */
+    /* Twitch Embed */
     .twitch-section {
-      margin-top: 60px;
-      width: 100%;
+      margin-top: 50px;
       display: flex;
+      justify-content: center;
       flex-direction: column;
       align-items: center;
     }
 
-    .twitch-wrapper {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border-top: 3px solid #8a2be2;
-      border-bottom: 3px solid #8a2be2;
-      box-shadow: 0 0 40px #a020f0;
-      overflow: hidden;
-    }
-
     #twitch-embed {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
+      width: 80%;
+      height: 480px;
+      border: 2px solid #9b30ff;
+      border-radius: 15px;
+      box-shadow: 0 0 40px #a020f0;
     }
 
     footer {
@@ -167,22 +162,22 @@
   </div>
 
   <div class="twitch-section">
-    <h2 style="margin-bottom: 15px; text-shadow: 0 0 20px #a020f0;">Live on Twitch</h2>
-    <div class="twitch-wrapper">
-      <div id="twitch-embed"></div>
-    </div>
+    <h2 style="margin-bottom: 10px; text-shadow: 0 0 20px #a020f0;">Live on Twitch</h2>
+    <!-- Add a placeholder for the Twitch embed -->
+    <div id="twitch-embed"></div>
   </div>
 
-  <footer>© 2025 Five2357 | 🟪🟣💜 HTMl-JS:Five2357 | CSS:ChatGPT</footer>
+  <footer>© 2025 Five2357 | 🟪🟣💜</footer>
 
+  <!-- Twitch Embed Script -->
   <script src="https://player.twitch.tv/js/embed/v1.js"></script>
   <script type="text/javascript">
     new Twitch.Player("twitch-embed", {
-      channel: "voidternity",
-      parent: ["localhost"] // replace with your domain if hosted
+      channel: "voidternity"
     });
   </script>
 
+  <!-- Particles.js -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
     particlesJS("particles-js", {
