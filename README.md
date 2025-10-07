@@ -8,12 +8,8 @@
 **Q**: What is **[BlueCube](https://bluecube.pages.dev/)**?  
 **A**: ***IDK***. Why would i know.  
 
-**Websites:**  
+**Website:** [https://bluecube.pages.dev/](https://bluecube.pages.dev/)
 
 [![badge](extra/Badge1.svg)](https://github.com/Five-2357/BlueCube/)
-
-1. [https://bluecube.pages.dev/](https://bluecube.pages.dev/?from=Git)
-2. [Im too broke]
-3. [yes still TOO BROKE]
 ---
 ----
