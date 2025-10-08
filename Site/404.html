@@ -44,7 +44,6 @@
       backdrop-filter: blur(6px) saturate(120%);
     }
 
-    /* left panel */
     .left {
       padding: 28px;
     }
@@ -94,7 +93,6 @@
       opacity:0.9;
     }
 
-    /* right panel (game) */
     .play-area{
       padding:18px;
       display:flex;
@@ -130,7 +128,6 @@
       margin-top:6px;
     }
 
-    /* mobile arrows */
     .touch-controls{
       display:flex;
       flex-direction:column;
@@ -156,7 +153,6 @@
       touch-action: none;
     }
 
-    /* overlay: pause / game over */
     .overlay{
       position:absolute;
       inset:0;
@@ -178,7 +174,6 @@
     }
     .hidden{display:none}
 
-    /* responsive */
     @media (max-width:880px){
       .card{grid-template-columns:1fr; padding:14px}
       h1{font-size:54px}
@@ -204,7 +199,6 @@
     </div>
 
     <div class="play-area" style="position:relative;">
-      <!-- overlay container -->
       <div id="overlay" class="overlay hidden">
         <div class="panel" id="overlayPanel"></div>
       </div>
@@ -230,14 +224,12 @@
   </div>
 
 <script>
-/* ========== CONFIG ========== */
-const TILE_COUNT = 20;     // grid is TILE_COUNT x TILE_COUNT
-const BASE_SPEED = 120;    // ms per frame at start (lower is faster)
-const MIN_SPEED = 40;      // fastest allowed ms per frame
-const SPEED_STEP_PER_5 = 6; // how much to speed up every 5 points (ms)
+const TILE_COUNT = 20;
+const BASE_SPEED = 120;
+const MIN_SPEED = 40;
+const SPEED_STEP_PER_5 = 6;
 const COOKIE_NAME = "snake_highscore_pages";
 
-/* ========== DOM ========== */
 const canvas = document.getElementById('gameCanvas');
 const scoreEl = document.getElementById('score');
 const highscoreEl = document.getElementById('highscore');
@@ -246,24 +238,19 @@ const pauseBtn = document.getElementById('pauseBtn');
 const restartBtn = document.getElementById('restartBtn');
 const overlay = document.getElementById('overlay');
 const overlayPanel = document.getElementById('overlayPanel');
-
 const btnUp = document.getElementById('btnUp');
 const btnLeft = document.getElementById('btnLeft');
 const btnDown = document.getElementById('btnDown');
 const btnRight = document.getElementById('btnRight');
 
 const ctx = canvas.getContext('2d');
-
-/* responsive: set canvas internal pixel size to grid*cell */
-const CELL = 20; // internal pixels per tile (drawing resolution)
+const CELL = 20;
 canvas.width = TILE_COUNT * CELL;
 canvas.height = TILE_COUNT * CELL;
-/* CSS will scale canvas to fit smaller screens automatically */
 
-/* ========== GAME STATE ========== */
 let snake = [];
-let direction = "RIGHT"; // initial movement
-let nextDirection = direction; // buffer to avoid instant reversals
+let direction = "RIGHT";
+let nextDirection = direction;
 let food = {x:0,y:0};
 let score = 0;
 let highScore = 0;
@@ -271,7 +258,6 @@ let gameInterval = null;
 let isPaused = false;
 let gameOver = false;
 
-/* audio (tiny blips) */
 let audioCtx = null;
 function beep(freq, time=0.06, vol=0.06){
   try{
@@ -288,7 +274,6 @@ function beep(freq, time=0.06, vol=0.06){
   }catch(e){}
 }
 
-/* ========== COOKIE HELPERS ========== */
 function setCookie(name,value,days){
   const d = new Date();
   d.setTime(d.getTime() + (days*24*60*60*1000));
@@ -298,8 +283,6 @@ function getCookie(name){
   const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([.*+?^=!:${}()|[\]\/\\])/g,'\\$1') + '=([^;]*)'));
   return match ? decodeURIComponent(match[1]) : null;
 }
-
-/* load highscore (cookie -> fallback localStorage) */
 function loadHighScore(){
   const c = getCookie(COOKIE_NAME);
   if(c !== null){
@@ -320,7 +303,6 @@ function saveHighScore(v){
   }catch(e){}
 }
 
-/* ========== UTIL ========== */
 function randSpot(){
   return {
     x: Math.floor(Math.random() * TILE_COUNT) * CELL,
@@ -329,23 +311,23 @@ function randSpot(){
 }
 function samePos(a,b){ return a.x===b.x && a.y===b.y; }
 function collisionWithBody(head, body){
-  // check head against every segment
   for(let i=0;i<body.length;i++){
     if(samePos(head, body[i])) return true;
   }
   return false;
 }
 
-/* ========== GAME LOGIC ========== */
 function resetGame(){
-  snake = [{ x: 9*CELL, y: 10*CELL }];
+  snake = [
+    { x: 9*CELL, y: 10*CELL },  // head
+    { x: 8*CELL, y: 10*CELL }   // body
+  ];
   direction = "RIGHT";
   nextDirection = direction;
-  score = 0;
+  score = 1; // start with 1 point
   isPaused = false;
   gameOver = false;
   food = randSpot();
-  // ensure food not on snake
   while(collisionWithBody(food, snake)) food = randSpot();
   updateScoreUI();
   hideOverlay();
@@ -358,17 +340,14 @@ function updateScoreUI(){
 }
 
 function currentSpeed(){
-  // speed up a bit every 5 points
   const sp = Math.max(MIN_SPEED, BASE_SPEED - Math.floor(score / 5) * SPEED_STEP_PER_5);
   return sp;
 }
-
 function resetInterval(){
   if(gameInterval) clearInterval(gameInterval);
   if(isPaused || gameOver) return;
   gameInterval = setInterval(gameStep, currentSpeed());
 }
-
 function togglePause(){
   if(gameOver) return;
   isPaused = !isPaused;
@@ -382,8 +361,6 @@ function togglePause(){
     resetInterval();
   }
 }
-
-/* game over UI */
 function endGame(){
   gameOver = true;
   if(gameInterval) clearInterval(gameInterval);
@@ -397,53 +374,36 @@ function endGame(){
   showOverlay("Game Over", `Score: ${score} — High: ${highScore}`, true);
 }
 
-/* main frame */
 function gameStep(){
-  // apply buffered direction (prevent immediate reverse)
   if(canChangeDirection(direction, nextDirection)) direction = nextDirection;
-
   let head = { x: snake[0].x, y: snake[0].y };
   if(direction === "LEFT") head.x -= CELL;
   if(direction === "RIGHT") head.x += CELL;
   if(direction === "UP") head.y -= CELL;
   if(direction === "DOWN") head.y += CELL;
 
-  // wall collision
   if(head.x < 0 || head.y < 0 || head.x >= canvas.width || head.y >= canvas.height){
     endGame();
     return;
   }
-
-  // self collision
   if(collisionWithBody(head, snake)){
     endGame();
     return;
   }
-
-  // eat food?
   if(head.x === food.x && head.y === food.y){
     score++;
     beep(800,0.06,0.06);
-    // spawn new food not on snake
     do { food = randSpot(); } while(collisionWithBody(food, snake) || (food.x === head.x && food.y === head.y));
-    // don't pop tail -> grows
     snake.unshift(head);
-    // speed might change
     updateScoreUI();
     resetInterval();
   } else {
-    // normal move
     snake.pop();
     snake.unshift(head);
   }
-
-  // draw
   render();
 }
 
-/* allow direction change only if not opposite to current direction
-   and only accept the first buffered change until frame applies it.
-*/
 function canChangeDirection(cur, next){
   if(!next) return false;
   if(cur === "LEFT" && next === "RIGHT") return false;
@@ -453,53 +413,41 @@ function canChangeDirection(cur, next){
   return true;
 }
 
-/* ========== RENDER ========== */
 function render(){
-  // background
   ctx.fillStyle = "#001f3f";
   ctx.fillRect(0,0,canvas.width, canvas.height);
-
-  // grid subtle (optional)
   ctx.strokeStyle = "rgba(255,255,255,0.03)";
   ctx.lineWidth = 1;
   for(let i=0;i<=TILE_COUNT;i++){
-    // vertical
     ctx.beginPath();
     ctx.moveTo(i * CELL + 0.5, 0);
     ctx.lineTo(i * CELL + 0.5, canvas.height);
     ctx.stroke();
-    // horizontal
     ctx.beginPath();
     ctx.moveTo(0, i * CELL + 0.5);
     ctx.lineTo(canvas.width, i * CELL + 0.5);
     ctx.stroke();
   }
 
-  // draw food
   ctx.fillStyle = "#FF4136";
   roundRect(ctx, food.x+2, food.y+2, CELL-4, CELL-4, 4, true, false);
 
-  // draw snake
   for(let i=0;i<snake.length;i++){
     if(i===0){
-      // head: light cyan with glow
       ctx.fillStyle = "#9ef6ff";
       ctx.shadowColor = "rgba(0,195,255,0.35)";
       ctx.shadowBlur = 12;
       roundRect(ctx, snake[i].x+2, snake[i].y+2, CELL-4, CELL-4, 5, true, false);
       ctx.shadowBlur = 0;
     } else {
-      // body: gradient blues
       ctx.fillStyle = i%2===0 ? "#0074D9" : "#005fa3";
       roundRect(ctx, snake[i].x+2, snake[i].y+2, CELL-4, CELL-4, 4, true, false);
     }
-    // inner border
     ctx.strokeStyle = "rgba(0,0,0,0.45)";
     ctx.lineWidth = 1;
   }
 }
 
-/* rounded rect helper */
 function roundRect(ctx,x,y,w,h,r,fill,stroke){
   if (typeof r === 'undefined') r = 2;
   ctx.beginPath();
@@ -513,7 +461,6 @@ function roundRect(ctx,x,y,w,h,r,fill,stroke){
   if(stroke) ctx.stroke();
 }
 
-/* ========== UI: Overlay & Buttons ========== */
 function showOverlay(title, text, showRestart=false){
   overlayPanel.innerHTML = `<div style="font-size:18px;font-weight:700;margin-bottom:6px">${title}</div>
                             <div style="color:#dff5ff;margin-bottom:12px">${text || ''}</div>
@@ -531,48 +478,29 @@ function hideOverlay(){
   overlay.style.pointerEvents = 'none';
 }
 
-/* ========== INPUT HANDLERS ========== */
-/* keyboard: support lowercase/uppercase for WASD */
 window.addEventListener('keydown', (ev)=>{
   const key = (ev.key || '').toLowerCase();
-
   if(key === 'p'){ ev.preventDefault(); togglePause(); return; }
-
-  // arrows and wasd
-  if(key === 'arrowleft' || key === 'a') {
-    nextDirection = "LEFT";
-  } else if(key === 'arrowup' || key === 'w') {
-    nextDirection = "UP";
-  } else if(key === 'arrowright' || key === 'd') {
-    nextDirection = "RIGHT";
-  } else if(key === 'arrowdown' || key === 's') {
-    nextDirection = "DOWN";
-  }
+  if(key === 'arrowleft' || key === 'a') nextDirection = "LEFT";
+  else if(key === 'arrowup' || key === 'w') nextDirection = "UP";
+  else if(key === 'arrowright' || key === 'd') nextDirection = "RIGHT";
+  else if(key === 'arrowdown' || key === 's') nextDirection = "DOWN";
 });
 
-/* buttons */
 homeBtn.addEventListener('click', ()=> window.location.href = '/');
 pauseBtn.addEventListener('click', togglePause);
-restartBtn.addEventListener('click', ()=>{
-  resetGame();
-});
+restartBtn.addEventListener('click', ()=>{ resetGame(); });
 
-/* on-screen controls */
 btnUp.addEventListener('touchstart', ()=> setDirFromBtn('UP'), {passive:true});
 btnLeft.addEventListener('touchstart', ()=> setDirFromBtn('LEFT'), {passive:true});
 btnDown.addEventListener('touchstart', ()=> setDirFromBtn('DOWN'), {passive:true});
 btnRight.addEventListener('touchstart', ()=> setDirFromBtn('RIGHT'), {passive:true});
 
-// also work on clicks (desktop)
 [btnUp,btnLeft,btnDown,btnRight].forEach(b=>{
   b.addEventListener('mousedown', (e)=>{ e.preventDefault(); setDirFromBtn(b.id.replace('btn','').toUpperCase()); });
 });
+function setDirFromBtn(d){ nextDirection = d; }
 
-function setDirFromBtn(d){
-  nextDirection = d;
-}
-
-/* swipe detection for touch */
 let touchStartX=0, touchStartY=0;
 const TOUCH_THRESHOLD = 20;
 canvas.addEventListener('touchstart', (e)=> {
@@ -592,28 +520,13 @@ canvas.addEventListener('touchend', (e)=> {
   }
 },{passive:true});
 
-/* ========== INIT ========== */
 function init(){
   highScore = loadHighScore();
   highscoreEl.textContent = highScore;
-
   resetGame();
-
-  // render initial frame (avoid blank)
   render();
 }
-
-/* start */
 init();
-
-/* ========== Prevent accidental double-reverse bug by buffering direction from input events:
-   we only accept nextDirection and apply it at frame start if it's not a direct opposite.
-   This prevents fast key spams causing collision with immediate opposite.
-*/
-
-/* Expose restart via global for console debug if needed */
-window._snake_restart = resetGame;
-
 </script>
 </body>
 </html>
