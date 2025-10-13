@@ -14,4 +14,4 @@
 ---
 ----
 
-[Cool -> Clock](https://bluecube.pages.dev/cool/Clock#dark=1;speed=0.5;utc=4;clean)
+[Cool -> Clock](https://bluecube.pages.dev/cool/Clock#dark=1;speed=0.5;clean)
