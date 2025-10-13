@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vanilla Clock Grid</title>
+<title>Smooth Vanilla Clock Grid</title>
 <style>
-/* === Your Original CSS === */
 body {
   padding: 0;
   margin: 0;
@@ -77,11 +76,8 @@ body {
 </style>
 </head>
 <body>
-  <div id="root"></div>
+<div id="root"></div>
 <script>
-/* === Vanilla JS Equivalent === */
-
-// Define the clock segment orientations
 const H  = { h: 0,   m: 180 },
       V  = { h: 270, m: 90 },
       TL = { h: 180, m: 270 },
@@ -91,23 +87,22 @@ const H  = { h: 0,   m: 180 },
       E  = { h: 135, m: 135 };
 
 const digits = [
-  [BR,H,H,BL, V,BR,BL,V, V,V,V,V, V,V,V,V, V,TR,TL,V, TR,H,H,TL],
-  [BR,H,BL,E, TR,BL,V,E, E,V,V,E, E,V,V,E, BR,TL,TR,BL, TR,H,H,TL],
-  [BR,H,H,BL, TR,H,BL,V, BR,H,TL,V, V,BR,H,TL, V,TR,H,BL, TR,H,H,TL],
-  [BR,H,H,BL, TR,H,BL,V, E,BR,TL,V, E,TR,BL,V, BR,H,TL,V, TR,H,H,TL],
-  [BR,BL,BR,BL, V,V,V,V, V,TR,TL,V, TR,H,BL,V, E,E,V,V, E,E,TR,TL],
-  [BR,H,H,BL, V,BR,H,TL, V,TR,H,BL, TR,H,BL,V, BR,H,TL,V, TR,H,H,TL],
-  [BR,H,H,BL, V,BR,H,TL, V,TR,H,BL, V,BR,BL,V, V,TR,TL,V, TR,H,H,TL],
-  [BR,H,H,BL, TR,H,BL,V, E,E,V,V, E,E,V,V, E,E,V,V, E,E,TR,TL],
-  [BR,H,H,BL, V,BR,BL,V, V,TR,TL,V, V,BR,BL,V, V,TR,TL,V, TR,H,H,TL],
-  [BR,H,H,BL, V,BR,BL,V, V,TR,TL,V, TR,H,BL,V, BR,H,TL,V, TR,H,H,TL]
+  [BR,H,H,BL,V,BR,BL,V,V,V,V,V,V,V,V,V,V,TR,TL,V,TR,H,H,TL],
+  [BR,H,BL,E,TR,BL,V,E,E,V,V,E,E,V,V,E,BR,TL,TR,BL,TR,H,H,TL],
+  [BR,H,H,BL,TR,H,BL,V,BR,H,TL,V,V,BR,H,TL,V,TR,H,BL,TR,H,H,TL],
+  [BR,H,H,BL,TR,H,BL,V,E,BR,TL,V,E,TR,BL,V,BR,H,TL,V,TR,H,H,TL],
+  [BR,BL,BR,BL,V,V,V,V,V,TR,TL,V,TR,H,BL,V,E,E,V,V,E,E,TR,TL],
+  [BR,H,H,BL,V,BR,H,TL,V,TR,H,BL,TR,H,BL,V,BR,H,TL,V,TR,H,H,TL],
+  [BR,H,H,BL,V,BR,H,TL,V,TR,H,BL,V,BR,BL,V,V,TR,TL,V,TR,H,H,TL],
+  [BR,H,H,BL,TR,H,BL,V,E,E,V,V,E,E,V,V,E,E,V,V,E,E,TR,TL],
+  [BR,H,H,BL,V,BR,BL,V,V,TR,TL,V,V,BR,BL,V,V,TR,TL,V,TR,H,H,TL],
+  [BR,H,H,BL,V,BR,BL,V,V,TR,TL,V,TR,H,BL,V,BR,H,TL,V,TR,H,H,TL]
 ];
 
 const normalizeAngle = (next, prev) => {
   const delta = ((next - prev) % 360 + 360) % 360;
   return prev + delta;
 };
-
 const getTimeDigits = () => {
   const now = new Date();
   return [
@@ -116,63 +111,57 @@ const getTimeDigits = () => {
     now.getSeconds()
   ].flatMap(val => String(val).padStart(2, "0").split("").map(Number));
 };
-
 const randomAngle = () => Math.floor(Math.random() * 360);
 
-// Create one clock element
-function createClock(h, m, initial) {
-  const el = document.createElement("div");
-  el.className = "clock";
-  el.style.setProperty("--hour-angle", initial ? randomAngle() : h);
-  el.style.setProperty("--minute-angle", initial ? randomAngle() : m);
-  el.style.setProperty("--dur", initial ? 1 : 0.4);
-  return el;
-}
-
-// Build app
 const root = document.getElementById("root");
 const app = document.createElement("div");
 app.className = "app";
 root.appendChild(app);
 
-// Keep track of previous angles for smooth transitions
-let prevAngles = Array(6 * 24).fill({ h: 0, m: 0 });
-let timeDigits = Array(6).fill(0);
-let initial = true;
+let prevAngles = [];
+let clocks = [];
 
-// Build initial DOM structure
-function render(initial) {
-  app.innerHTML = "";
+function initClocks() {
+  const timeDigits = getTimeDigits();
   timeDigits.forEach((t, i) => {
-    const digitWrap = document.createElement("div");
+    const segment = document.createElement("div");
     digits[t].forEach(({ h, m }, j) => {
-      const prev = prevAngles[i * 24 + j] || { h: 0, m: 0 };
-      const hourAngle = normalizeAngle(h, prev.h);
-      const minuteAngle = normalizeAngle(m, prev.m);
-      prevAngles[i * 24 + j] = { h: hourAngle, m: minuteAngle };
-      digitWrap.appendChild(createClock(hourAngle, minuteAngle, initial));
+      const c = document.createElement("div");
+      c.className = "clock";
+      c.style.setProperty("--hour-angle", randomAngle());
+      c.style.setProperty("--minute-angle", randomAngle());
+      c.style.setProperty("--dur", 1);
+      prevAngles.push({ h, m });
+      clocks.push(c);
+      segment.appendChild(c);
     });
-    app.appendChild(digitWrap);
+    app.appendChild(segment);
   });
 }
 
-// Time updater
-function updateClock() {
-  timeDigits = getTimeDigits();
-  render(false);
+function updateClocks() {
+  const timeDigits = getTimeDigits();
+  let index = 0;
+  timeDigits.forEach((t) => {
+    digits[t].forEach(({ h, m }) => {
+      const prev = prevAngles[index];
+      const hourAngle = normalizeAngle(h, prev.h);
+      const minuteAngle = normalizeAngle(m, prev.m);
+      prevAngles[index] = { h: hourAngle, m: minuteAngle };
+      const c = clocks[index];
+      c.style.setProperty("--dur", 0.4);
+      c.style.setProperty("--hour-angle", hourAngle);
+      c.style.setProperty("--minute-angle", minuteAngle);
+      index++;
+    });
+  });
   const now = Date.now();
   const delay = 1000 - (now % 1000);
-  setTimeout(updateClock, delay);
+  setTimeout(updateClocks, delay);
 }
 
-// Initial animation then start ticking
-setTimeout(() => {
-  initial = false;
-  updateClock();
-}, 600);
-
-// Initial render
-render(true);
+initClocks();
+setTimeout(updateClocks, 600);
 </script>
 </body>
 </html>
