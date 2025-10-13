@@ -13,3 +13,5 @@
 [![badge](extra/Badge1.svg)](https://github.com/Five-2357/BlueCube/)
 ---
 ----
+
+[Cool -> Clock](https://bluecube.pages.dev/cool/Clock#dark=1;speed=0.5;utc=4;clean)
