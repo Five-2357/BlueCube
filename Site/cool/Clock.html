@@ -3,31 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smooth Vanilla Clock Grid</title>
+<title>FastClock Pro</title>
 <style>
-body {
-  padding: 0;
-  margin: 0;
-}
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-.app {
+:root {
   --clock-size: 3vw;
   --gap: calc(var(--clock-size) * 0.05);
   --clock-segment-w: calc(var(--clock-size) * 4 + var(--gap) * 5);
   --clock-segment-h: calc(var(--clock-size) * 6 + var(--gap) * 5);
-  font-family: sans-serif;
-  text-align: center;
+  --dur: 0.4s;
+  --bg: #f0f0f0;
+  --clock-border: #fff;
+  --clock-face: linear-gradient(225deg, #d0d0d0 10%, white);
+  --hand-color: #000;
+  --text: #111;
+}
+
+body.dark {
+  --bg: #111;
+  --clock-border: #333;
+  --clock-face: linear-gradient(225deg, #1a1a1a 10%, #222);
+  --hand-color: #0ff;
+  --text: #eee;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+}
+
+.app {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--gap);
   align-items: center;
   justify-content: center;
   height: 100vh;
   padding-left: calc(var(--clock-size) + var(--gap) * 2);
 }
+
 .app > div {
   display: flex;
   flex-wrap: wrap;
@@ -35,58 +51,81 @@ body {
   width: var(--clock-segment-w);
   height: var(--clock-segment-h);
 }
+
 .app > div:nth-of-type(even) {
   margin-right: var(--clock-size);
 }
+
 .clock {
-  --w: 47%;
-  --h: 3px;
-  --dur: 0.4s;
   position: relative;
   width: var(--clock-size);
   height: var(--clock-size);
   border-radius: 50%;
   flex-shrink: 0;
-  border: 2px solid white;
-  background: linear-gradient(225deg, #d0d0d0 10%, white);
-  box-shadow: -2px 2px 6px #d0d0d0, 2px -2px 6px #ffffff;
+  border: 2px solid var(--clock-border);
+  background: var(--clock-face);
+  box-shadow: -2px 2px 6px #0002, 2px -2px 6px #fff2;
 }
+
 .clock::before,
 .clock::after {
   position: absolute;
   content: '';
-  top: calc(50% - var(--h) * 0.5);
+  top: calc(50% - 1.5px);
   left: 50%;
   transform-origin: 0% 50%;
-  width: var(--w);
-  height: var(--h);
-  background: black;
+  width: 47%;
+  height: 3px;
+  background: var(--hand-color);
   border-radius: 9999px;
-  transition: calc(var(--dur) * 1s) ease-in-out;
+  transition: var(--dur) ease-in-out;
   transform: rotate(calc(var(--angle) * 1deg));
 }
+
 .clock::before { --angle: var(--hour-angle); }
 .clock::after { --angle: var(--minute-angle); }
-@media (max-width: 700px) {
-  .clock { --h: 2px; border: 1px solid white; }
+
+.settings {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--bg);
+  border: 1px solid var(--text);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  z-index: 10;
 }
-@media (max-width: 500px) {
-  .clock { --h: 1px; --w: 50%; }
+
+.settings label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.settings input[type="range"] {
+  width: 100px;
+}
+
+@media (max-width: 700px) {
+  .clock { border: 1px solid var(--clock-border); }
 }
 </style>
 </head>
 <body>
 <div id="root"></div>
-<script>
-const H  = { h: 0,   m: 180 },
-      V  = { h: 270, m: 90 },
-      TL = { h: 180, m: 270 },
-      TR = { h: 0,   m: 270 },
-      BL = { h: 180, m: 90 },
-      BR = { h: 0,   m: 90 },
-      E  = { h: 135, m: 135 };
 
-const digits = [
+<div class="settings">
+  <label><input type="checkbox" id="toggleDark"> Dark mode</label>
+  <label><input type="checkbox" id="toggleUTC"> Use UTC</label>
+  <label><input type="checkbox" id="toggleMillis"> Show milliseconds</label>
+  <label>Speed <input type="range" id="speedRange" min="0.1" max="2" step="0.1" value="0.4"></label>
+</div>
+
+<script>
+const H={h:0,m:180},V={h:270,m:90},TL={h:180,m:270},TR={h:0,m:270},BL={h:180,m:90},BR={h:0,m:90},E={h:135,m:135};
+const digits=[
   [BR,H,H,BL,V,BR,BL,V,V,V,V,V,V,V,V,V,V,TR,TL,V,TR,H,H,TL],
   [BR,H,BL,E,TR,BL,V,E,E,V,V,E,E,V,V,E,BR,TL,TR,BL,TR,H,H,TL],
   [BR,H,H,BL,TR,H,BL,V,BR,H,TL,V,V,BR,H,TL,V,TR,H,BL,TR,H,H,TL],
@@ -99,69 +138,74 @@ const digits = [
   [BR,H,H,BL,V,BR,BL,V,V,TR,TL,V,TR,H,BL,V,BR,H,TL,V,TR,H,H,TL]
 ];
 
-const normalizeAngle = (next, prev) => {
-  const delta = ((next - prev) % 360 + 360) % 360;
-  return prev + delta;
-};
-const getTimeDigits = () => {
-  const now = new Date();
-  return [
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds()
-  ].flatMap(val => String(val).padStart(2, "0").split("").map(Number));
-};
-const randomAngle = () => Math.floor(Math.random() * 360);
+const normalizeAngle=(n,p)=>p+(((n-p)%360+360)%360);
+const randomAngle=()=>Math.floor(Math.random()*360);
+const app=document.createElement("div");app.className="app";document.getElementById("root").appendChild(app);
 
-const root = document.getElementById("root");
-const app = document.createElement("div");
-app.className = "app";
-root.appendChild(app);
-
-let prevAngles = [];
-let clocks = [];
-
-function initClocks() {
-  const timeDigits = getTimeDigits();
-  timeDigits.forEach((t, i) => {
-    const segment = document.createElement("div");
-    digits[t].forEach(({ h, m }, j) => {
-      const c = document.createElement("div");
-      c.className = "clock";
-      c.style.setProperty("--hour-angle", randomAngle());
-      c.style.setProperty("--minute-angle", randomAngle());
-      c.style.setProperty("--dur", 1);
-      prevAngles.push({ h, m });
-      clocks.push(c);
-      segment.appendChild(c);
-    });
-    app.appendChild(segment);
-  });
+let useUTC=false,showMillis=false,animSpeed=0.4;
+const clocks=[],prevAngles=[];
+function getTimeDigits(){
+  const now=new Date();
+  const h=useUTC?now.getUTCHours():now.getHours();
+  const m=useUTC?now.getUTCMinutes():now.getMinutes();
+  const s=useUTC?now.getUTCSeconds():now.getSeconds();
+  const ms=showMillis?Math.floor(now.getMilliseconds()/100):null;
+  return showMillis?[...String(h).padStart(2,"0"),...String(m).padStart(2,"0"),...String(s).padStart(2,"0"),ms].map(Number)
+                    :[...String(h).padStart(2,"0"),...String(m).padStart(2,"0"),...String(s).padStart(2,"0")].map(Number);
 }
-
-function updateClocks() {
-  const timeDigits = getTimeDigits();
-  let index = 0;
-  timeDigits.forEach((t) => {
-    digits[t].forEach(({ h, m }) => {
-      const prev = prevAngles[index];
-      const hourAngle = normalizeAngle(h, prev.h);
-      const minuteAngle = normalizeAngle(m, prev.m);
-      prevAngles[index] = { h: hourAngle, m: minuteAngle };
-      const c = clocks[index];
-      c.style.setProperty("--dur", 0.4);
-      c.style.setProperty("--hour-angle", hourAngle);
-      c.style.setProperty("--minute-angle", minuteAngle);
+function createClock(h,m){
+  const c=document.createElement("div");
+  c.className="clock";
+  c.style.setProperty("--hour-angle",randomAngle());
+  c.style.setProperty("--minute-angle",randomAngle());
+  app.appendChild(c);
+  return c;
+}
+function initClocks(){
+  const initDigits=getTimeDigits();
+  initDigits.forEach(d=>digits[d].forEach(({h,m})=>{
+    const c=createClock(h,m);
+    clocks.push(c);
+    prevAngles.push({h,m});
+  }));
+}
+function updateClocks(){
+  const timeDigits=getTimeDigits();
+  let index=0;
+  timeDigits.forEach(d=>{
+    digits[d].forEach(({h,m})=>{
+      const prev=prevAngles[index];
+      const hour=normalizeAngle(h,prev.h);
+      const min=normalizeAngle(m,prev.m);
+      prevAngles[index]={h:hour,m:min};
+      const c=clocks[index];
+      c.style.setProperty("--dur",`${animSpeed}s`);
+      c.style.setProperty("--hour-angle",hour);
+      c.style.setProperty("--minute-angle",min);
       index++;
     });
   });
-  const now = Date.now();
-  const delay = 1000 - (now % 1000);
-  setTimeout(updateClocks, delay);
+  const delay=showMillis?100:1000;
+  setTimeout(updateClocks,delay);
 }
 
+// Settings
+document.getElementById("toggleDark").oninput=e=>{
+  document.body.classList.toggle("dark",e.target.checked);
+};
+document.getElementById("toggleUTC").oninput=e=>useUTC=e.target.checked;
+document.getElementById("toggleMillis").oninput=e=>{
+  showMillis=e.target.checked;
+  app.innerHTML="";
+  clocks.length=0;prevAngles.length=0;
+  initClocks();
+};
+document.getElementById("speedRange").oninput=e=>{
+  animSpeed=parseFloat(e.target.value);
+};
+
 initClocks();
-setTimeout(updateClocks, 600);
+setTimeout(updateClocks,600);
 </script>
 </body>
 </html>
