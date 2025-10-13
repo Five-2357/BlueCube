@@ -152,8 +152,8 @@ if (location.hash.includes(';no-set')) {
 }
 
 if (location.hash.includes(';no-f')) {
-  const footer = document.querySelector('.footer'); // or whatever your footer class is
-  if (footer) footer.classList.remove('footer');   // remove the class
+  const footer = document.querySelector('.footer'); // or whatever classes you target
+  if (footer) footer.remove(); // nukes the element entirely
 }
 
 
