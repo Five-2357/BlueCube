@@ -146,6 +146,11 @@ body.dark .controls{ background: rgba(10,10,10,0.65); border-color:#333; }
   <div class="footer">FastClock Pro — smooth. No cookies.</div>
 
 <script>
+// ====== Detect no-set in URL ======
+if(location.hash.includes(';no-set')){
+  controls.style.display = 'none';  // hide settings completely
+}
+
 /* ========= Configuration / digit definitions (same layout as original) ========= */
 const H  = { h: 0,   m: 180 },
       V  = { h: 270, m: 90 },
