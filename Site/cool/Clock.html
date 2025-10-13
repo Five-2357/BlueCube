@@ -151,8 +151,9 @@ if (location.hash.includes(';no-set')) {
   controls.style.display = 'none';  // hide settings completely
 }
 
-if (location.hash.includes(';no-f')) {
+if (location.hash.includes(';clean')) {
   const footer = document.querySelector('.footer'); // or whatever classes you target
+   controls.style.display = 'none';  // hide settings completely
   if (footer) footer.remove(); // nukes the element entirely
 }
 
