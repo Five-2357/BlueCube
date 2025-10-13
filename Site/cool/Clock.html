@@ -1,211 +1,388 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FastClock Pro</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FastClock Pro — No Cookies</title>
 <style>
-:root {
-  --clock-size: 3vw;
-  --gap: calc(var(--clock-size) * 0.05);
-  --clock-segment-w: calc(var(--clock-size) * 4 + var(--gap) * 5);
-  --clock-segment-h: calc(var(--clock-size) * 6 + var(--gap) * 5);
-  --dur: 0.4s;
-  --bg: #f0f0f0;
-  --clock-border: #fff;
-  --clock-face: linear-gradient(225deg, #d0d0d0 10%, white);
-  --hand-color: #000;
-  --text: #111;
+:root{
+  --clock-size:3vw;
+  --gap:calc(var(--clock-size)*0.05);
+  --clock-segment-w:calc(var(--clock-size)*4 + var(--gap)*5);
+  --clock-segment-h:calc(var(--clock-size)*6 + var(--gap)*5);
+  --dur:0.4s;
+  --bg:#f0f0f0;
+  --clock-border:#fff;
+  --clock-face:linear-gradient(225deg,#d0d0d0 10%,white);
+  --hand-color:#000;
+  --text:#111;
 }
-
-body.dark {
-  --bg: #111;
-  --clock-border: #333;
-  --clock-face: linear-gradient(225deg, #1a1a1a 10%, #222);
-  --hand-color: #0ff;
-  --text: #eee;
+body.dark{
+  --bg:#0b0b0b;
+  --clock-border:#222;
+  --clock-face:linear-gradient(225deg,#111 10%,#1a1a1a);
+  --hand-color:#66f;
+  --text:#eaeaea;
 }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, sans-serif;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
-
-.app {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding-left: calc(var(--clock-size) + var(--gap) * 2);
+.container{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-left:calc(var(--clock-size) + var(--gap) * 2);
 }
-
-.app > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
-  width: var(--clock-segment-w);
-  height: var(--clock-segment-h);
+.app{
+  display:flex;
+  gap:var(--gap);
+  align-items:center;
+  justify-content:center;
 }
-
-.app > div:nth-of-type(even) {
-  margin-right: var(--clock-size);
+.app>div{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--gap);
+  width:var(--clock-segment-w);
+  height:var(--clock-segment-h);
 }
+.app>div:nth-of-type(even){ margin-right: var(--clock-size); }
 
-.clock {
-  position: relative;
-  width: var(--clock-size);
-  height: var(--clock-size);
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 2px solid var(--clock-border);
-  background: var(--clock-face);
-  box-shadow: -2px 2px 6px #0002, 2px -2px 6px #fff2;
+.clock{
+  width:var(--clock-size);
+  height:var(--clock-size);
+  border-radius:50%;
+  border:2px solid var(--clock-border);
+  background:var(--clock-face);
+  position:relative;
+  flex-shrink:0;
+  box-shadow:-2px 2px 6px #0002, 2px -2px 6px #fff2;
+  --hour-angle:0;
+  --minute-angle:0;
+  --dur:0.4;
 }
-
 .clock::before,
-.clock::after {
-  position: absolute;
-  content: '';
-  top: calc(50% - 1.5px);
-  left: 50%;
-  transform-origin: 0% 50%;
-  width: 47%;
-  height: 3px;
-  background: var(--hand-color);
-  border-radius: 9999px;
-  transition: var(--dur) ease-in-out;
+.clock::after{
+  content:'';
+  position:absolute;
+  top:calc(50% - 1.5px);
+  left:50%;
+  transform-origin:0% 50%;
+  width:47%;
+  height:3px;
+  border-radius:9999px;
+  background:var(--hand-color);
+  transition: calc(var(--dur) * 1s) ease-in-out;
   transform: rotate(calc(var(--angle) * 1deg));
 }
+.clock::before{ --angle: var(--hour-angle); }
+.clock::after{ --angle: var(--minute-angle); }
 
-.clock::before { --angle: var(--hour-angle); }
-.clock::after { --angle: var(--minute-angle); }
-
-.settings {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: var(--bg);
-  border: 1px solid var(--text);
-  border-radius: 6px;
-  padding: 10px;
-  font-size: 14px;
-  z-index: 10;
+.controls{
+  position:fixed;
+  right:12px;
+  top:12px;
+  z-index:20;
+  background:rgba(255,255,255,0.85);
+  color:var(--text);
+  border:1px solid #aaa;
+  padding:10px;
+  border-radius:8px;
+  font-size:13px;
+  backdrop-filter: blur(6px);
 }
+body.dark .controls{ background: rgba(10,10,10,0.65); border-color:#333; }
 
-.settings label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 4px 0;
+.controls .row{ display:flex; align-items:center; gap:8px; margin:6px 0; }
+.controls label{ display:flex; align-items:center; gap:6px; }
+.controls select, .controls input[type="range"] { font-size:13px; }
+
+.footer{
+  position:fixed;
+  left:12px;
+  bottom:12px;
+  font-size:12px;
+  color:var(--text);
+  opacity:0.8;
 }
-
-.settings input[type="range"] {
-  width: 100px;
-}
-
-@media (max-width: 700px) {
-  .clock { border: 1px solid var(--clock-border); }
+@media (max-width:700px){
+  .clock{ border-width:1px; }
 }
 </style>
 </head>
 <body>
-<div id="root"></div>
+  <div class="container">
+    <div id="appRoot" class="app"></div>
+  </div>
 
-<div class="settings">
-  <label><input type="checkbox" id="toggleDark"> Dark mode</label>
-  <label><input type="checkbox" id="toggleUTC"> Use UTC</label>
-  <label><input type="checkbox" id="toggleMillis"> Show milliseconds</label>
-  <label>Speed <input type="range" id="speedRange" min="0.1" max="2" step="0.1" value="0.4"></label>
-</div>
+  <div class="controls" id="controls">
+    <div class="row">
+      <label><input type="checkbox" id="darkToggle"> Dark</label>
+      <label style="margin-left:6px">Speed
+        <input id="speed" type="range" min="0.05" max="2" step="0.05" value="0.4" style="width:120px; margin-left:8px">
+      </label>
+    </div>
+
+    <div class="row">
+      <label>UTC offset
+        <select id="utcOffset" style="margin-left:8px">
+          <!-- options populated by JS -->
+        </select>
+      </label>
+      <button id="saveHash" title="Write current settings to URL hash" style="margin-left:8px">Save URL</button>
+      <button id="resetHash" title="Clear saved settings from URL" style="margin-left:6px">Clear URL</button>
+    </div>
+
+    <div style="margin-top:6px; font-size:12px; opacity:0.9;">
+      No cookies. Settings -> URL hash only.
+    </div>
+  </div>
+
+  <div class="footer">FastClock Pro — smooth. No cookies.</div>
 
 <script>
-const H={h:0,m:180},V={h:270,m:90},TL={h:180,m:270},TR={h:0,m:270},BL={h:180,m:90},BR={h:0,m:90},E={h:135,m:135};
-const digits=[
-  [BR,H,H,BL,V,BR,BL,V,V,V,V,V,V,V,V,V,V,TR,TL,V,TR,H,H,TL],
-  [BR,H,BL,E,TR,BL,V,E,E,V,V,E,E,V,V,E,BR,TL,TR,BL,TR,H,H,TL],
-  [BR,H,H,BL,TR,H,BL,V,BR,H,TL,V,V,BR,H,TL,V,TR,H,BL,TR,H,H,TL],
-  [BR,H,H,BL,TR,H,BL,V,E,BR,TL,V,E,TR,BL,V,BR,H,TL,V,TR,H,H,TL],
-  [BR,BL,BR,BL,V,V,V,V,V,TR,TL,V,TR,H,BL,V,E,E,V,V,E,E,TR,TL],
-  [BR,H,H,BL,V,BR,H,TL,V,TR,H,BL,TR,H,BL,V,BR,H,TL,V,TR,H,H,TL],
-  [BR,H,H,BL,V,BR,H,TL,V,TR,H,BL,V,BR,BL,V,V,TR,TL,V,TR,H,H,TL],
-  [BR,H,H,BL,TR,H,BL,V,E,E,V,V,E,E,V,V,E,E,V,V,E,E,TR,TL],
-  [BR,H,H,BL,V,BR,BL,V,V,TR,TL,V,V,BR,BL,V,V,TR,TL,V,TR,H,H,TL],
-  [BR,H,H,BL,V,BR,BL,V,V,TR,TL,V,TR,H,BL,V,BR,H,TL,V,TR,H,H,TL]
+/* ========= Configuration / digit definitions (same layout as original) ========= */
+const H  = { h: 0,   m: 180 },
+      V  = { h: 270, m: 90 },
+      TL = { h: 180, m: 270 },
+      TR = { h: 0,   m: 270 },
+      BL = { h: 180, m: 90 },
+      BR = { h: 0,   m: 90 },
+      E  = { h: 135, m: 135 };
+
+const digits = [
+  [BR,H,H,BL, V,BR,BL,V, V,V,V,V, V,V,V,V, V,TR,TL,V, TR,H,H,TL],
+  [BR,H,BL,E, TR,BL,V,E, E,V,V,E, E,V,V,E, BR,TL,TR,BL, TR,H,H,TL],
+  [BR,H,H,BL, TR,H,BL,V, BR,H,TL,V, V,BR,H,TL, V,TR,H,BL, TR,H,H,TL],
+  [BR,H,H,BL, TR,H,BL,V, E,BR,TL,V, E,TR,BL,V, BR,H,TL,V, TR,H,H,TL],
+  [BR,BL,BR,BL, V,V,V,V, V,TR,TL,V, TR,H,BL,V, E,E,V,V, E,E,TR,TL],
+  [BR,H,H,BL, V,BR,H,TL, V,TR,H,BL, TR,H,BL,V, BR,H,TL,V, TR,H,H,TL],
+  [BR,H,H,BL, V,BR,H,TL, V,TR,H,BL, V,BR,BL,V, V,TR,TL,V, TR,H,H,TL],
+  [BR,H,H,BL, TR,H,BL,V, E,E,V,V, E,E,V,V, E,E,V,V, E,E,TR,TL],
+  [BR,H,H,BL, V,BR,BL,V, V,TR,TL,V, V,BR,BL,V, V,TR,TL,V, TR,H,H,TL],
+  [BR,H,H,BL, V,BR,BL,V, V,TR,TL,V, TR,H,BL,V, BR,H,TL,V, TR,H,H,TL],
 ];
 
-const normalizeAngle=(n,p)=>p+(((n-p)%360+360)%360);
-const randomAngle=()=>Math.floor(Math.random()*360);
-const app=document.createElement("div");app.className="app";document.getElementById("root").appendChild(app);
+/* ========= Utilities ========= */
+const randAngle = ()=>Math.floor(Math.random()*360);
+const normalizeAngle = (target, prev)=>{
+  // returns prev + minimal positive delta that reaches target modulo 360
+  const delta = ((target - (prev % 360)) % 360 + 360) % 360;
+  return prev + delta;
+};
 
-let useUTC=false,showMillis=false,animSpeed=0.4;
-const clocks=[],prevAngles=[];
-function getTimeDigits(){
-  const now=new Date();
-  const h=useUTC?now.getUTCHours():now.getHours();
-  const m=useUTC?now.getUTCMinutes():now.getMinutes();
-  const s=useUTC?now.getUTCSeconds():now.getSeconds();
-  const ms=showMillis?Math.floor(now.getMilliseconds()/100):null;
-  return showMillis?[...String(h).padStart(2,"0"),...String(m).padStart(2,"0"),...String(s).padStart(2,"0"),ms].map(Number)
-                    :[...String(h).padStart(2,"0"),...String(m).padStart(2,"0"),...String(s).padStart(2,"0")].map(Number);
-}
-function createClock(h,m){
-  const c=document.createElement("div");
-  c.className="clock";
-  c.style.setProperty("--hour-angle",randomAngle());
-  c.style.setProperty("--minute-angle",randomAngle());
-  app.appendChild(c);
-  return c;
-}
-function initClocks(){
-  const initDigits=getTimeDigits();
-  initDigits.forEach(d=>digits[d].forEach(({h,m})=>{
-    const c=createClock(h,m);
-    clocks.push(c);
-    prevAngles.push({h,m});
-  }));
-}
-function updateClocks(){
-  const timeDigits=getTimeDigits();
-  let index=0;
-  timeDigits.forEach(d=>{
-    digits[d].forEach(({h,m})=>{
-      const prev=prevAngles[index];
-      const hour=normalizeAngle(h,prev.h);
-      const min=normalizeAngle(m,prev.m);
-      prevAngles[index]={h:hour,m:min};
-      const c=clocks[index];
-      c.style.setProperty("--dur",`${animSpeed}s`);
-      c.style.setProperty("--hour-angle",hour);
-      c.style.setProperty("--minute-angle",min);
-      index++;
+/* ========= App state (in-memory only) ========= */
+let utcOffset = 0;        // hours (can be negative)
+let animSpeed = 0.4;      // CSS transition seconds
+let darkMode = false;
+
+/* ========= DOM references ========= */
+const appRoot = document.getElementById('appRoot');
+const darkToggle = document.getElementById('darkToggle');
+const speedRange = document.getElementById('speed');
+const utcSelect = document.getElementById('utcOffset');
+const saveBtn = document.getElementById('saveHash');
+const clearBtn = document.getElementById('resetHash');
+
+/* ========= Build UTC offset select (-12 to +14) ========= */
+(function populateUTC(){
+  const start = -12, end = 14;
+  for(let i=start;i<=end;i++){
+    const opt = document.createElement('option');
+    const sign = i>=0?'+':'';
+    opt.value = String(i);
+    opt.textContent = (i===0? 'UTC+0' : `UTC${sign}${i}`);
+    utcSelect.appendChild(opt);
+  }
+})();
+
+/* ========= Clocks storage ========= */
+const clocks = [];       // DOM elements (in the order we build them)
+const prevAngles = [];   // parallel array of {h:..., m:...} numeric angles (can be >360 for continued rotation)
+
+/* ========= Build clocks once ========= */
+function buildClocks(){
+  appRoot.innerHTML = ''; clocks.length = 0; prevAngles.length = 0;
+  // initial time digits to decide how many groups (we always have 6 digits: HH MM SS -> each 2 chars)
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+  const initialDigits = [
+    ...String(hours).padStart(2,'0'),
+    ...String(minutes).padStart(2,'0'),
+    ...String(seconds).padStart(2,'0')
+  ].map(ch => Number(ch));
+  // For each of the 6 digits, create a segment div and append 24 clocks (pattern length)
+  initialDigits.forEach(digitValue=>{
+    const seg = document.createElement('div');
+    const pattern = digits[digitValue];
+    // pattern is array of 24 segment objects
+    pattern.forEach(segDef=>{
+      // create clock element
+      const c = document.createElement('div');
+      c.className = 'clock';
+      // random initial angles so they animate into place
+      const rH = randAngle();
+      const rM = randAngle();
+      c.style.setProperty('--hour-angle', String(rH));
+      c.style.setProperty('--minute-angle', String(rM));
+      c.style.setProperty('--dur', String(1)); // slower initial
+      seg.appendChild(c);
+      clocks.push(c);
+      prevAngles.push({ h: rH, m: rM });
     });
+    appRoot.appendChild(seg);
   });
-  const delay=showMillis?100:1000;
-  setTimeout(updateClocks,delay);
 }
 
-// Settings
-document.getElementById("toggleDark").oninput=e=>{
-  document.body.classList.toggle("dark",e.target.checked);
-};
-document.getElementById("toggleUTC").oninput=e=>useUTC=e.target.checked;
-document.getElementById("toggleMillis").oninput=e=>{
-  showMillis=e.target.checked;
-  app.innerHTML="";
-  clocks.length=0;prevAngles.length=0;
-  initClocks();
-};
-document.getElementById("speedRange").oninput=e=>{
-  animSpeed=parseFloat(e.target.value);
-};
+/* ========= Time -> digits using utcOffset ========= */
+function getTimeDigitsForOffset(){
+  const now = new Date();
+  // compute base UTC time in ms, add offset hours
+  const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const targetMs = utcMs + (utcOffset * 3600000);
+  const t = new Date(targetMs);
+  const h = t.getHours(), m = t.getMinutes(), s = t.getSeconds();
+  return [
+    ...String(h).padStart(2,'0'),
+    ...String(m).padStart(2,'0'),
+    ...String(s).padStart(2,'0')
+  ].map(ch => Number(ch));
+}
 
-initClocks();
-setTimeout(updateClocks,600);
+/* ========= Core update loop ========= */
+let runningTimeout = null;
+function scheduleNextTick(){
+  const now = Date.now();
+  const delay = 1000 - (now % 1000);
+  runningTimeout = setTimeout(tick, delay);
+}
+
+function tick(){
+  // calculate current digits for chosen offset
+  const digitsNow = getTimeDigitsForOffset(); // array of 6 numbers [H1,H2,M1,M2,S1,S2]
+  // for each digit group, update its 24 clocks in the same order we built them
+  let idx = 0; // index into clocks & prevAngles
+  for (let d = 0; d < digitsNow.length; d++){
+    const val = digitsNow[d];
+    const pattern = digits[val]; // array of 24 {h,m}
+    for (let p = 0; p < pattern.length; p++){
+      const target = pattern[p];
+      const prev = prevAngles[idx];
+      // compute normalized angles (continuous rotation)
+      const newH = normalizeAngle(target.h, prev.h);
+      const newM = normalizeAngle(target.m, prev.m);
+      // store them
+      prevAngles[idx] = { h: newH, m: newM };
+      // apply to DOM
+      const c = clocks[idx];
+      // set duration based on current animSpeed
+      c.style.setProperty('--dur', String(animSpeed));
+      c.style.setProperty('--hour-angle', String(newH));
+      c.style.setProperty('--minute-angle', String(newM));
+      idx++;
+    }
+  }
+  // schedule next tick
+  scheduleNextTick();
+}
+
+/* ========= Hash <-> settings ========= */
+function readHash(){
+  // expected format: #dark=1;speed=0.4;utc=+4
+  const raw = location.hash.slice(1);
+  if(!raw) return;
+  const pairs = raw.split(';').map(s=>s.split('='));
+  for(const [k,v] of pairs){
+    if(!k) continue;
+    if(k==='dark') darkMode = (v === '1' || v === 'true');
+    else if(k==='speed'){ const n=parseFloat(v); if(!Number.isNaN(n)) animSpeed = n; }
+    else if(k==='utc'){ const n=parseFloat(v); if(!Number.isNaN(n)) utcOffset = n; }
+  }
+}
+function writeHash(){
+  const parts = [];
+  parts.push('dark=' + (darkMode ? '1' : '0'));
+  parts.push('speed=' + String(animSpeed));
+  parts.push('utc=' + String(utcOffset));
+  location.hash = parts.join(';');
+}
+/* ========= UI wiring ========= */
+darkToggle.addEventListener('change', e=>{
+  darkMode = !!e.target.checked;
+  document.body.classList.toggle('dark', darkMode);
+});
+speedRange.addEventListener('input', e=>{
+  animSpeed = parseFloat(e.target.value);
+});
+utcSelect.addEventListener('change', e=>{
+  utcOffset = parseFloat(e.target.value);
+  // no DOM rebuild required: next tick will use new offset
+});
+saveBtn.addEventListener('click', e=>{
+  writeHash();
+  saveBtn.textContent = 'Saved ✓';
+  setTimeout(()=> saveBtn.textContent = 'Save URL', 1200);
+});
+clearBtn.addEventListener('click', e=>{
+  history.replaceState(null, '', location.pathname + location.search);
+  saveBtn.textContent = 'Cleared ✓';
+  setTimeout(()=> saveBtn.textContent = 'Save URL', 1200);
+});
+
+/* ========= Initialization flow ========= */
+function initFromHashOrDefaults(){
+  // defaults already set above
+  readHash(); // mutate darkMode, animSpeed, utcOffset if hash present
+
+  // sync UI controls with current settings
+  darkToggle.checked = !!darkMode;
+  document.body.classList.toggle('dark', !!darkMode);
+
+  // clamp animSpeed to permitted range and set slider
+  if (!animSpeed || animSpeed <= 0) animSpeed = 0.4;
+  if (animSpeed < parseFloat(speedRange.min)) animSpeed = parseFloat(speedRange.min);
+  if (animSpeed > parseFloat(speedRange.max)) animSpeed = parseFloat(speedRange.max);
+  speedRange.value = String(animSpeed);
+
+  // set utc select if value available
+  // choose closest option
+  const opt = Array.from(utcSelect.options).find(o=>Number(o.value) === utcOffset);
+  if(opt) utcSelect.value = String(utcOffset);
+  else {
+    // clamp to within options if out of range
+    const first = Number(utcSelect.options[0].value);
+    const last = Number(utcSelect.options[utcSelect.options.length-1].value);
+    if(utcOffset < first) utcOffset = first;
+    if(utcOffset > last) utcOffset = last;
+    utcSelect.value = String(utcOffset);
+  }
+}
+
+/* ========= Start it up ========= */
+initFromHashOrDefaults();
+buildClocks();
+
+// wait a tick so initial random angles show, then perform first tick (which animates to real angles)
+setTimeout(()=>{
+  tick(); // this schedules itself repeatedly
+}, 300);
+
+// optionally, update hash when user leaves or presses save — but we only write when Save URL clicked
+// no cookies/localStorage used
+
+// expose some debug (optional)
+window.FastClock = {
+  rebuild: ()=>{ buildClocks(); },
+  writeHash,
+  readHash
+};
 </script>
 </body>
 </html>
