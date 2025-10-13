@@ -177,7 +177,7 @@ const normalizeAngle = (target, prev)=>{
 };
 
 /* ========= App state (in-memory only) ========= */
-let utcOffset = 0;        // hours (can be negative)
+let utcOffset = -new Date().getTimezoneOffset() / 60; // local timezone in hours
 let animSpeed = 0.4;      // CSS transition seconds
 let darkMode = false;
 
