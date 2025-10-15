@@ -10,7 +10,7 @@
 
 **Website:** [https://bluecube.pages.dev/](https://bluecube.pages.dev/)
 
-[![badge](extra/Badge1.svg)](https://github.com/Five-2357/BlueCube/)
+[![badge](Stuff/Badge1.svg)](https://github.com/Five-2357/BlueCube/)
 ---
 ----
 
