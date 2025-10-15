@@ -1,0 +1,47 @@
+name: "✨ Feature Request"
+description: "Suggest a new idea or feature for this project"
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! Please fill out the form below.
+
+  - type: input
+    id: summary
+    attributes:
+      label: "💡 Feature Summary"
+      description: "Briefly explain what the feature should do."
+      placeholder: "Add dark mode toggle for the app"
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "🔥 Why is this needed?"
+      description: "Explain the problem this feature solves or why it would help users."
+      placeholder: "Right now the app is too bright at night..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "🧠 Possible Solution"
+      description: "If you have ideas on how to implement it, drop them here."
+      placeholder: "Maybe use a CSS variable toggle or a settings switch."
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: "📎 Additional Context"
+      description: "Any screenshots, sketches, or other details?"
+      placeholder: "Attach image links, examples, etc."
+    validations:
+      required: false
