@@ -1,21 +1,30 @@
-name: "✨ Feature Request"
-description: "Suggest a new idea or feature for this project"
-title: "[Feature]: "
-labels: ["enhancement"]
+name: "✨ Website Feature Request"
+description: "Suggest a new idea or improvement for the website"
+title: "[Website Feature]: "
+labels: ["enhancement", "website"]
 assignees: []
 
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to suggest a new feature! Please fill out the form below.
+        Thanks for suggesting a website improvement! Please fill out the details below so we can review it 🧠
+
+  - type: input
+    id: page
+    attributes:
+      label: "🌍 Related Page / Section"
+      description: "Which page or section would this feature affect?"
+      placeholder: "bluecube.pages.dev/cool"
+    validations:
+      required: true
 
   - type: input
     id: summary
     attributes:
       label: "💡 Feature Summary"
-      description: "Briefly explain what the feature should do."
-      placeholder: "Add dark mode toggle for the app"
+      description: "Briefly describe the feature you want."
+      placeholder: "Add a dark mode toggle"
     validations:
       required: true
 
@@ -23,17 +32,17 @@ body:
     id: motivation
     attributes:
       label: "🔥 Why is this needed?"
-      description: "Explain the problem this feature solves or why it would help users."
-      placeholder: "Right now the app is too bright at night..."
+      description: "Explain why this feature would help users."
+      placeholder: "Many users prefer dark mode for nighttime browsing."
     validations:
       required: true
 
   - type: textarea
     id: solution
     attributes:
-      label: "🧠 Possible Solution"
-      description: "If you have ideas on how to implement it, drop them here."
-      placeholder: "Maybe use a CSS variable toggle or a settings switch."
+      label: "🧠 Suggested Implementation"
+      description: "Optional ideas on how to implement it."
+      placeholder: "Could add a switch in the header that toggles a dark theme class."
     validations:
       required: false
 
@@ -41,7 +50,7 @@ body:
     id: extra
     attributes:
       label: "📎 Additional Context"
-      description: "Any screenshots, sketches, or other details?"
-      placeholder: "Attach image links, examples, etc."
+      description: "Screenshots, sketches, or other details."
+      placeholder: "Attach wireframes, examples, or links here."
     validations:
       required: false
