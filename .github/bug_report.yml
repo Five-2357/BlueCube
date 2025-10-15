@@ -15,7 +15,7 @@ body:
     attributes:
       label: "🌍 Page URL"
       description: "Which page or section of the website has the issue?"
-      placeholder: "bluecube.com/cool"
+      placeholder: "bluecube.pages.dev/cool"
     validations:
       required: true
 
