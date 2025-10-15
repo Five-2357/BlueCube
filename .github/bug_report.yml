@@ -1,0 +1,105 @@
+name: "🐞 Website Bug Report"
+description: "Report an issue or glitch on the website"
+title: "[Website Bug]: "
+labels: ["bug", "website"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a website bug! Please fill out the details below so we can fix it quickly 🧠
+
+  - type: input
+    id: url
+    attributes:
+      label: "🌍 Page URL"
+      description: "Which page or section of the website has the issue?"
+      placeholder: "bluecube.com/cool"
+    validations:
+      required: true
+
+  - type: input
+    id: summary
+    attributes:
+      label: "⚡ Summary"
+      description: "Briefly describe what went wrong."
+      placeholder: "Navbar disappears when scrolling"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: "🧩 Steps to Reproduce"
+      description: "List the steps to trigger the bug."
+      placeholder: |
+        1. Go to homepage  
+        2. Scroll down quickly  
+        3. Navbar vanishes
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "✅ Expected Behavior"
+      description: "What should have happened instead?"
+      placeholder: "Navbar should stay visible while scrolling."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: "❌ Actual Behavior"
+      description: "What actually happened?"
+      placeholder: "Navbar flickers and disappears."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: "🌐 Browser"
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Safari
+        - Opera
+        - Mobile Browser
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: "💻 Device Type"
+      options:
+        - Desktop
+        - Laptop
+        - Tablet
+        - Phone
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: "🧱 Operating System"
+      description: "What OS were you using?"
+      placeholder: "Windows 11 / macOS 15 / Android 14 / iOS 18"
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: "📎 Additional Context"
+      description: "Any screenshots, console errors, or extra info?"
+      placeholder: "Attach screenshots or copy console logs here."
+    validations:
+      required: false
