@@ -4,16 +4,34 @@ style.textContent = `
   body {
     margin: 0;
     height: 100vh;
-    background: #f7f9fc;
+    background: var(--bg);
     font-family: 'Segoe UI', sans-serif;
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  :root {
+    --bg: #f7f9fc;
+    --text: #000;
+    --menu-bg: #fff;
+    --menu-border: #ddd;
+    --menu-hover: #f0f0f0;
+  }
+
+  body.dark {
+    --bg: #0f1115;
+    --text: #eaeaea;
+    --menu-bg: #1a1d23;
+    --menu-border: #333;
+    --menu-hover: #2a2e35;
   }
 
   #contextMenu {
     position: absolute;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
+    background-color: var(--menu-bg);
+    border: 1px solid var(--menu-border);
     border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     padding: 0;
     margin: 0;
     list-style: none;
@@ -21,6 +39,8 @@ style.textContent = `
     z-index: 1000;
     min-width: 160px;
     animation: fadeIn 0.15s ease-in-out;
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
   #contextMenu li {
@@ -30,7 +50,7 @@ style.textContent = `
   }
 
   #contextMenu li:hover {
-    background-color: #f0f0f0;
+    background-color: var(--menu-hover);
   }
 
   @keyframes fadeIn {
