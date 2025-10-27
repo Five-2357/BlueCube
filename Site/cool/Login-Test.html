@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Login + Save Data</title>
+  <title>Supabase Auth (Cloudflare Safe)</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
@@ -15,6 +15,7 @@
       justify-content: center;
       height: 100vh;
       gap: 10px;
+      text-align: center;
     }
     input, textarea, button {
       padding: 10px;
@@ -22,6 +23,7 @@
       border: none;
       outline: none;
       font-size: 15px;
+      margin: 5px;
     }
     input, textarea {
       width: 250px;
@@ -43,32 +45,47 @@
 <body>
   <div id="auth-section" class="section">
     <h2>Login / Sign Up</h2>
+    <input id="username" type="text" placeholder="Username" /><br>
     <input id="email" type="email" placeholder="Email" /><br>
     <input id="password" type="password" placeholder="Password" /><br>
+    <input id="phone" type="tel" placeholder="Phone (optional)" /><br>
     <button id="signupBtn">Sign Up</button>
     <button id="loginBtn">Login</button>
   </div>
 
   <div id="app-section" class="section hidden">
     <h2>Welcome, <span id="user-email"></span></h2>
+    <p>Username: <span id="user-username"></span></p>
+    <p>Phone: <span id="user-phone"></span></p>
     <textarea id="userData" rows="5" placeholder="Your saved data (JSON)"></textarea><br>
-    <button id="saveBtn">💾 Save</button>
+    <button id="saveBtn">💾 Save Data</button>
     <button id="logoutBtn">🚪 Logout</button>
   </div>
 
   <script>
-    // --- CONFIGURE THESE TWO LINES ---
-    const SUPABASE_URL = 'https://jowhuezggczshvjivvkp.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impvd2h1ZXpnZ2N6c2h2aml2dmtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1NDE1MTMsImV4cCI6MjA3NzExNzUxM30.0BB1_0zZpSKrpPhT0m1ab707FjyFAG_dq7IxLSuEP8s';
-    // --------------------------------
+    // --- CONFIG ---
+    const SUPABASE_URL = 'https://YOUR_PROJECT_URL.supabase.co';
+    const SUPABASE_KEY = 'YOUR_ANON_PUBLIC_KEY';
+    // --------------
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: {
+        persistSession: true,
+        storage: window.localStorage,
+        autoRefreshToken: true
+      }
+    });
 
     const authSection = document.getElementById('auth-section');
     const appSection = document.getElementById('app-section');
+
+    const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
+    const phoneInput = document.getElementById('phone');
     const userEmailDisplay = document.getElementById('user-email');
+    const userUsernameDisplay = document.getElementById('user-username');
+    const userPhoneDisplay = document.getElementById('user-phone');
     const userDataArea = document.getElementById('userData');
 
     const signupBtn = document.getElementById('signupBtn');
@@ -76,47 +93,58 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const saveBtn = document.getElementById('saveBtn');
 
-    // === AUTH HANDLERS ===
+    // === SIGN UP ===
     signupBtn.onclick = async () => {
-      const { error } = await supabase.auth.signUp({
-        email: emailInput.value,
-        password: passwordInput.value
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const username = usernameInput.value.trim();
+      const phone = phoneInput.value.trim();
+
+      if (!email || !password || !username) {
+        alert("Username, email, and password are required.");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username, phone },
+          emailRedirectTo: 'https://bluecube.pages.dev/cool/Login-Test'
+        }
       });
-      if (error) alert(error.message);
-      else alert('Signup successful! Check your email for confirmation.');
+
+      if (error) return alert(error.message);
+      alert('Signup successful! Check your email for confirmation.');
     };
 
+    // === LOGIN ===
     loginBtn.onclick = async () => {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: emailInput.value,
-        password: passwordInput.value
-      });
-      if (error) alert(error.message);
-      else loadSession();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return alert(error.message);
+      loadSession();
     };
 
+    // === LOGOUT ===
     logoutBtn.onclick = async () => {
       await supabase.auth.signOut();
       authSection.classList.remove('hidden');
       appSection.classList.add('hidden');
     };
 
-    // === SAVE & LOAD USER DATA ===
+    // === SAVE DATA ===
     async function saveUserData(userId, data) {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert({ id: userId, data });
+      const { error } = await supabase.from('profiles').upsert({ id: userId, data });
       if (error) alert(error.message);
       else alert('✅ Saved!');
     }
 
     async function loadUserData(userId) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('data')
-        .eq('id', userId)
-        .single();
-      if (!error && data) {
+      const { data, error } = await supabase.from('profiles').select('data').eq('id', userId).single();
+      if (!error && data && data.data) {
         userDataArea.value = JSON.stringify(data.data, null, 2);
       }
     }
@@ -127,20 +155,27 @@
       try {
         const jsonData = JSON.parse(userDataArea.value || '{}');
         await saveUserData(session.user.id, jsonData);
-      } catch (e) {
+      } catch {
         alert('Invalid JSON');
       }
     };
 
-    // === AUTO LOAD SESSION ===
+    // === LOAD SESSION ===
     async function loadSession() {
       const { data } = await supabase.auth.getSession();
       const session = data.session;
+
       if (session) {
         const user = session.user;
-        userEmailDisplay.textContent = user.email;
+        const meta = user.user_metadata || {};
+
+        userEmailDisplay.textContent = user.email || 'N/A';
+        userUsernameDisplay.textContent = meta.username || 'N/A';
+        userPhoneDisplay.textContent = meta.phone || 'N/A';
+
         authSection.classList.add('hidden');
         appSection.classList.remove('hidden');
+
         await loadUserData(user.id);
       } else {
         authSection.classList.remove('hidden');
@@ -148,11 +183,9 @@
       }
     }
 
-    // Reacts to auth changes (login/logout)
+    // === AUTO RESTORE ON PAGE LOAD ===
+    window.addEventListener('load', loadSession);
     supabase.auth.onAuthStateChange(loadSession);
-
-    // Run on page load
-    loadSession();
   </script>
 </body>
 </html>
